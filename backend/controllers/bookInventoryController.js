@@ -7,7 +7,7 @@ export const createBooksInventory = async (req, res, next) => {
             ...req.body,
         });
         await newBooksInventory.save();
-        res.status(201).send("BooksInventory has been added.");
+        res.status(201).send("Books Inventory has been added.");
     } catch(err) {
         next(err);
     }
