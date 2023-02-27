@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
+import cors from "cors";
 import booksInventoryRoute from "./routes/bookInventory.route.js";
 import bookConditionRoute from "./routes/bookCondition.route.js";
 import warehouseCityRoute from "./routes/warehouseCity.route.js";
@@ -10,6 +11,8 @@ import warehouseCityRoute from "./routes/warehouseCity.route.js";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+app.use(cors());
+app.options('*', cors());
 dotenv.config();
 mongoose.set("strictQuery", true);
 
