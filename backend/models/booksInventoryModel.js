@@ -4,39 +4,44 @@ const { Schema } = mongoose;
 const booksInventorySchema = new Schema({
     isbn: {
        type: Number,
-       required: true,
-       unique: true
+       required: [ true, "ISBN is required."],
+       unique: [ true, "ISBN should be a unique value."],
+       minLength: [10, "ISBN should be atleast 10 digit long."],
+       maxLength: [13, "ISBN can only be 13 digit long."]
     },
     mrp: {
         type: Number,
-        required: true
+        required: [ true, "MRP is required."],
+        default: 0
     },
     pricing: [{
         book_condition: {
             type: String,
-            required: true
+            required: [ true, "Book Condition for Price is required."],
         },
         price: {
             type: Number,
-            required: true
+            required: [ true, "Price is required."],
+            default: 0
         }
     }],
     inventory:[{
         book_condition: {
             type: String,
-            required: true
+            required: [ true, "Book Condition for Inventory is required."],
         },
         city: {
             type: String,
-            required: true
+            required: [ true, "Warehouse City is required."],
         },
         quantity: {
             type: Number,
-            required: true
+            required: [ true, "Quantity is required."],
+            default: 1
         },
         location: {
             type: String,
-            required: true
+            required: [ true, "Stock Location is required."],
         },
     }]
 }, {

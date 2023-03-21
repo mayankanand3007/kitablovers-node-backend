@@ -5,7 +5,7 @@ const warehouseCitySchema = new Schema({
     name: {
        type: String,
        required: [ true, "Warehouse City is required."],
-       unique: [ true, "Warehouse City value should be unique"]
+       unique: [ true, "Warehouse City value should be unique."]
     }
 }, {
     timestamps:true,
