@@ -27,28 +27,10 @@ const connect = async () => {
     }
 };
 
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUI from "swagger-ui-express";
-const swaggerDocument = require('./utils/swagger.json');
-const swaggerOptions = {
-    definition: {
-        openapi: '3.0.0.',
-        info: {
-            title: 'Kitab Lovers Ecommerce App',
-            description: 'API Docs for Kitab Lovers Ecommerce App',
-            version: '1.0.0'
-        },
-        servers: [
-            {
-                url: 'http://localhost:4000/'
-            }
-        ]
-    },
-    apis: ['./server.js']
-}
+//import swaggerUI from "swagger-ui-express";
+//import swaggerDocument from "./utils/swagger.json" assert { type: 'json' };
 
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+//app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 
 // Route Imports
