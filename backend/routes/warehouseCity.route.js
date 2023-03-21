@@ -7,10 +7,10 @@ import {createWarehouseCityInventory,
 
 const router = express.Router();
 
-router.get("/", getWarehouseCity);
+router.get("/", getAllWarehouseCities);
 router.post("/", createWarehouseCityInventory);
 router.put("/:id", updateWarehouseCity)
 router.delete("/:id", deleteWarehouseCity)
-router.get("/:id", getAllWarehouseCities);
+router.get("/:id", getWarehouseCity);
 
 export default router;
