@@ -1,21 +1,35 @@
 import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUI from "swagger-ui-express";
 import cors from "cors";
-import booksInventoryRoute from "./routes/bookInventory.route.js";
-import bookConditionRoute from "./routes/bookCondition.route.js";
-import warehouseCityRoute from "./routes/warehouseCity.route.js";
+import errorMiddleware from "./middleware/error.js"
 
+// App Specs
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cors());
 app.options('*', cors());
-dotenv.config();
-mongoose.set("strictQuery", true);
+app.use(errorMiddleware);
 
+
+// ENV Config
+import dotenv from "dotenv";
+dotenv.config();
+
+// MongoDB Connectivity
+import mongoose from "mongoose";
+mongoose.set("strictQuery", true);
+const connect = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO);
+        console.log("Connected to mongodb!");
+    } catch(error) {
+        console.log(error);
+    }
+};
+
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUI from "swagger-ui-express";
+const swaggerDocument = require('./utils/swagger.json');
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0.',
@@ -34,16 +48,16 @@ const swaggerOptions = {
 }
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
-const connect = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO);
-        console.log("Connected to mongodb!");
-    } catch(error) {
-        console.log(error);
-    }
-};
+
+// Route Imports
+import booksInventoryRoute from "./routes/bookInventory.route.js";
+import bookConditionRoute from "./routes/bookCondition.route.js";
+import warehouseCityRoute from "./routes/warehouseCity.route.js";
+import bookRoute from "./routes/book.route.js";
+import genreRoute from "./routes/genre.route.js";
+import tagRoute from "./routes/tag.route.js";
 
 //Routes
 /**
@@ -110,6 +124,21 @@ const connect = async () => {
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/BooksInventory'
+ *  put:
+ *      description: Update single Books' Inventory
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/BooksInventory'
+ *      responses:
+ *          201:
+ *              description: Successful Response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/BooksInventory'
  */
 app.use("/api/BooksInventory", booksInventoryRoute);
 
@@ -121,7 +150,7 @@ app.use("/api/BooksInventory", booksInventoryRoute);
  *          type: object
  *          required:
  *              - name
- *          example:
+ *          example:1
  *              name: 'Original'
  * /api/BookCondition:
  *  get:
@@ -195,7 +224,53 @@ app.use("/api/BookCondition", bookConditionRoute);
  */
 app.use("/api/WarehouseCity", warehouseCityRoute);
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Books:
+ *          type: object
+ *          required:
+ *              - ISBN
+ *          example:
+ *              isbn: 123456789123
+ * /api/Books:
+ *  get:
+ *      description: Get All Books
+ *      content:
+ *          application/json:
+ *              schema:
+ *                  type: array
+ *                  items:
+ *                      $ref: '#/components/schemas/Books'
+ *      responses:
+ *          201: 
+ *              description: Successful Response
+ * 
+ *  post:
+ *      description: Add a single Book using ISBN.
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Books'
+ *      responses:
+ *          201:
+ *              description: Successful Response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Books'
+ */
+app.use("/api/Books", bookRoute);
+
+app.use("/api/Tag", tagRoute);
+
+app.use("/api/Genre", genreRoute);
+
+
 app.listen(process.env.PORT,() => {
     connect();
-    console.log("Backend Server is running!");
+    console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });
