@@ -40,7 +40,7 @@ export const updateBookCondition = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Book Condition not found.", 404));
     }
 
-    book_conditions = await bookCondition.findByIdAndUpdate(req.params.id,req.params.body,{
+    book_conditions = await bookCondition.findByIdAndUpdate(req.params.id,req.body,{
         new:true,
         runValidators:true,
         useFindandModify:false

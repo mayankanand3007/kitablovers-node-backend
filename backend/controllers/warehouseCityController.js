@@ -39,7 +39,7 @@ export const updateWarehouseCity = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Warehouse City not found.", 404));
     }
 
-    warehouse_cities = await warehouseCity.findByIdAndUpdate(req.params.id,req.params.body,{
+    warehouse_cities = await warehouseCity.findByIdAndUpdate(req.params.id,req.body,{
         new:true,
         runValidators:true,
         useFindandModify:false

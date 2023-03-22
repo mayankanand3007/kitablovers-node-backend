@@ -25,7 +25,7 @@ export const getTag = catchAsyncErrors(async (req, res, next) => {
     const tags = await tag.findById(req.params.id);
 
     if(!tags){
-        return next(new ErrorHandler("Inventory Record not found.", 404));
+        return next(new ErrorHandler("Tag not found.", 404));
     }
 
     res.status(200).json({
@@ -40,10 +40,10 @@ export const updateTag = catchAsyncErrors(async (req, res, next) => {
     let tags = tag.findById(req.params.id);
 
     if(!tags) {
-        return next(new ErrorHandler("Inventory Record not found.", 404));
+        return next(new ErrorHandler("Tag not found.", 404));
     }
 
-    tags = await tag.findByIdAndUpdate(req.params.id,req.params.body,{
+    tags = await tag.findByIdAndUpdate(req.params.id,req.body,{
         new:true,
         runValidators:true,
         useFindandModify:false

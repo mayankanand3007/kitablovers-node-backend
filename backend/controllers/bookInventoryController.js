@@ -27,7 +27,7 @@ async function createBooksISBN (isbn) {
     await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
     .then(res => res.json())
     .then(data => {
-        if (data.totalItems == 0) {
+        if (data.totalItems === 0) {
             return false;
         }
         else {
@@ -82,7 +82,7 @@ export const updateBooksInventory = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
 
-    books_inventories = await booksInventory.findByIdAndUpdate(req.params.id,req.params.body,{
+    books_inventories = await booksInventory.findByIdAndUpdate(req.params.id,req.body,{
         new:true,
         runValidators:true,
         useFindandModify:false
