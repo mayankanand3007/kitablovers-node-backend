@@ -2,6 +2,9 @@ import Book from "../models/bookModel.js";
 import booksInventory from "../models/booksInventoryModel.js";
 import ErrorHandler from "../utils/errorhandler.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
+import {getGenreL1,
+    getGenreL2,
+    getGenreL3} from "../controllers/genreController.js";
 
 // Create Books Inventory
 export const createBooksInventory = catchAsyncErrors(async (req, res, next) => {
@@ -47,7 +50,7 @@ async function createBooksISBN (isbn) {
             });
             newBook.save();
             return true;
-        }`  `
+        }
     });
 }
 

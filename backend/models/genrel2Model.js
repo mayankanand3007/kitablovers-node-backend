@@ -8,9 +8,9 @@ const genreL2Schema = new Schema({
         unique: [ true, "Genre Name should be unique."],
     },
     level1: {
-        type: String,
-        required: [ true, "Genre Name is required."],
-        unique: [ true, "Genre Name should be unique."],
+        type: mongoose.Schema.ObjectId,
+        ref: "GenreL1",
+        required: [ true, "Genre Name is required."]
     }
 }
 , {

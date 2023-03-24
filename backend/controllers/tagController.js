@@ -60,11 +60,8 @@ export const updateTag = catchAsyncErrors(async (req, res, next) => {
 export const deleteTag = catchAsyncErrors(async (req, res, next) => {
     const tags = await tag.findById(req.params.id);
 
-    if(!tags){
-        return res.status(500).json({
-            success:false,
-            message:"Tag not found."
-        })
+    if(!tags) {
+        return next(new ErrorHandler("Genre ID not found.", 404));
     }
 
     await tags.remove();
