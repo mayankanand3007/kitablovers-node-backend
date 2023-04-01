@@ -122,7 +122,7 @@ import tagRoute from "./routes/tag.route.js";
  *                      schema:
  *                          $ref: '#/components/schemas/BooksInventory'
  */
-app.use("/api/BooksInventory", booksInventoryRoute);
+app.use("/api/booksInventory", booksInventoryRoute);
 
 /**
  * @swagger
@@ -163,7 +163,7 @@ app.use("/api/BooksInventory", booksInventoryRoute);
  *                      schema:
  *                          $ref: '#/components/schemas/BookCondition'
  */
-app.use("/api/BookCondition", bookConditionRoute);
+app.use("/api/bookCondition", bookConditionRoute);
 
 /**
  * @swagger
@@ -204,7 +204,7 @@ app.use("/api/BookCondition", bookConditionRoute);
  *                      schema:
  *                          $ref: '#/components/schemas/WarehouseCity'
  */
-app.use("/api/WarehouseCity", warehouseCityRoute);
+app.use("/api/warehouseCity", warehouseCityRoute);
 
 /**
  * @swagger
@@ -245,11 +245,11 @@ app.use("/api/WarehouseCity", warehouseCityRoute);
  *                      schema:
  *                          $ref: '#/components/schemas/Books'
  */
-app.use("/api/Books", bookRoute);
+app.use("/api/book", bookRoute);
 
-app.use("/api/Tag", tagRoute);
+app.use("/api/tag", tagRoute);
 
-app.use("/api/Genre", genreRoute);
+app.use("/api/genre", genreRoute);
 
 
 app.listen(process.env.PORT,() => {

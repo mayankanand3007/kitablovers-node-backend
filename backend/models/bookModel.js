@@ -10,10 +10,8 @@ const bookSchema = new Schema({
         maxLength: [13, "ISBN can only be 13 digit long."]
      },
      genre: [{
-        name: {
-         type: String,
-         required: [ true, "Genre Names is required."]
-        }
+         type: Number,
+         required: true
     }],
     title: {
        type: String,
@@ -23,13 +21,13 @@ const bookSchema = new Schema({
         type: String,
         required: [ true, "Book Subtitle is required."],
     },
-    author: {
+    author: [{
         type: String,
-        required: [ true, "Author is required."],
-    },
+        required: true
+   }],
     thumbnail: {
-        type: String,
-        required: [ true, "Thumbnail URL is required."],
+        type: Buffer,
+        required: true,
     },
     description: {
         type: String,
@@ -52,7 +50,7 @@ const bookSchema = new Schema({
     },
     pageCount: {
         type: String,
-        required: [ true, "Thumbnail URL is required."],
+        required: [ true, "Page Count is required."],
     },
     ageGroup: {
         type: String,
@@ -70,8 +68,8 @@ const bookSchema = new Schema({
         type: String,
     },
     images: [{
-        url: {
-            type: String,
+        data: {
+            type: Buffer,
         },
         name: {
             type: String,
