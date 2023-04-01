@@ -101,6 +101,18 @@ export const getL2Genres = catchAsyncErrors(async (req, res, next) => {
     res.status(201).send(genres_val);
 });
 
+// Get L2 Genres
+export const getL1L2Genres = catchAsyncErrors(async (req, res, next) => {
+    const genresl1 = await genreL1.find();
+    let genres_val = [];
+    for (let genreno in genresl1) {
+        let genrel1 = genresl1[genreno];
+        let genresl2 = await genreL2.find({level1:genrel1.id});
+        genres_val.push({genrel1, children:genresl2});
+    }
+    res.status(201).send(genres_val);
+});
+
 // Get L3 Genres
 export const getL3Genres = catchAsyncErrors(async (req, res, next) => {
     const genresl2 = await genreL2.find();
@@ -117,6 +129,99 @@ export const getL3Genres = catchAsyncErrors(async (req, res, next) => {
         genres_val.push({...genrel3._doc, level_type:3, parent_genre: parent_genre.name});
     }
     res.status(201).send(genres_val);
+});
+
+// Get Replace L1 Genres
+export const getReplaceGenresL1 = catchAsyncErrors(async (req, res, next) => {
+    const genrel1 = await genreL1.findById(req.params.id);
+    if(!genrel1) {
+        return next(new ErrorHandler("Genre ID not found.", 404));
+    }
+    let genres_val = [];
+    let genresl1 = await genreL1.find();
+    for (let genreno in genresl1) {
+        let check_id = genresl1[genreno]._id;
+        if (genrel1._id.equals(check_id)) {
+            continue;
+        }
+        genres_val.push(genresl1[genreno]);
+    }
+    return res.status(201).send(genres_val);
+});
+
+// Get Replace L2 Genres
+export const getReplaceGenresL2 = catchAsyncErrors(async (req, res, next) => {
+    const genrel2 = await genreL2.findById(req.params.id);
+    if(!genrel2) {
+        return next(new ErrorHandler("Genre ID not found.", 404));
+    }
+    let genres_val = [];
+    let genresl2 = await genrel2.find();
+    for (let genreno in genresl2) {
+        let check_id = genresl2[genreno]._id;
+        if (genrel2._id.equals(check_id)) {
+            continue;
+        }
+        genres_val.push(genresl2[genreno]);
+    }
+    return res.status(201).send(genres_val);
+});
+
+// Get Replace L3 Genres
+export const getReplaceGenresL3 = catchAsyncErrors(async (req, res, next) => {
+    const genrel3 = await genrel3.findById(req.params.id);
+    if(!genrel3) {
+        return next(new ErrorHandler("Genre ID not found.", 404));
+    }
+    let genres_val = [];
+    let genresl3 = await genrel3.find();
+    for (let genreno in genresl3) {
+        let check_id = genresl3[genreno]._id;
+        if (genrel3._id.equals(check_id)) {
+            continue;
+        }
+        genres_val.push(genresl3[genreno]);
+    }
+    return res.status(201).send(genres_val);
+});
+
+// Get Replace Genres
+export const getReplaceGenres = catchAsyncErrors(async (req, res, next) => {
+    const genrel1 = await genreL1.findById(req.params.id);
+    if(genrel1) {
+        let genres_val = [];
+        const genresl1 = genreL1.find();
+        for (let genreno in genresl1) {
+
+            let genrel1_val = genresl1[genreno];
+            console.log(genrel1_val);
+            // if (genrel1_val._id === genrel1._id) {
+            //     continue;
+            // }
+            // genres_val.push({...genrel1_val._doc, level_type:1});
+        }
+        return res.status(201).send(genres_val);
+    }
+    const genrel2 = await genreL2.findById(req.params.id);
+    if(genrel2) {
+        let genres_val = [];
+        const genresl2 = genreL2.find();
+        for (let genreno in genresl2) {
+            let genrel2 = genresl2[genreno];
+            genres_val.push({...genrel2._doc, level_type:2});
+        }
+        return res.status(201).send(genres_val);
+    }
+    const genrel3 = await genreL3.findById(req.params.id);
+    if(genrel3) {
+        let genres_val = [];
+        const genresl3 = genreL3.find();
+        for (let genreno in genresl3) {
+            let genrel3 = genresl3[genreno];
+            genres_val.push({...genrel3._doc, level_type:3});
+        }
+        return res.status(201).send(genres_val);
+    }
 });
 
 // Get Genre by ID

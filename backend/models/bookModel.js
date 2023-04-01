@@ -82,6 +82,11 @@ const bookSchema = new Schema({
             type: String,
         }
     }],
+    thickness: [{
+        name: {
+            type: String,
+        }
+    }],
     reviews:[{
         user_id:{
             type: String,

@@ -22,14 +22,14 @@
                 }
               }
             },
-            "post": {
+            "/post": {
                 "tags": ["BooksInventory"],
                 "description": "Add a single Books' Inventory",
                 "parameters": [
                   {
-                    "name": "user",
+                    "name": "booksInventory",
                     "in": "body",
-                    "description": "User that we want to create",
+                    "description": "Inventory that we want to add",
                     "schema": {
                       "$ref": "#/definitions/BooksInventory"
                     }
@@ -38,14 +38,49 @@
                 "produces": ["application/json"],
                 "responses": {
                     "200": {
-                    "description": "New user is created",
+                    "description": "New Books' Inventory has been added.",
                     "schema": {
                         "$ref": "#/definitions/BooksInventory"
                         }
                     }
+                  }
+                },
+              "/put": {
+                "tags": ["BooksInventory"],
+                "description": "Update a single Books' Inventory",
+                "parameters": [
+                  {
+                    "name": "booksInventory",
+                    "in": "body",
+                    "description": "Books' Inventory that we want to update",
+                    "schema": {
+                      "$ref": "#/definitions/BooksInventory"
+                    }
+                  }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                    "description": "Books' Inventory has been updated.",
+                    "schema": {
+                        "$ref": "#/definitions/BooksInventory"
+                        }
+                    }
+                  }
+                },
+                "delete": {
+                  "tags": ["BooksInventory"],
+                  "summary": "Delete Books' Inventory by Id",
+                  "responses": {
+                    "200": {
+                      "description": "OK",
+                      "schema": {
+                        "$ref": "#/definitions/BooksInventories"
+                      }
+                    }
+                  }
                 }
             }
-          }
         },
         "definitions": {
             "BooksInventory": {
