@@ -24,7 +24,7 @@ const bookSchema = new Schema({
     author: [{
         type: String,
         required: true
-   }],
+    }],
     thumbnail: {
         type: Buffer,
         required: true,
@@ -76,9 +76,8 @@ const bookSchema = new Schema({
         }
     }],
     tags: [{
-        name: {
-            type: String,
-        }
+        type: mongoose.Schema.ObjectId,
+        ref: "Tag"
     }],
     thickness: {
             type: Number,
@@ -98,8 +97,7 @@ const bookSchema = new Schema({
             type:String,
             required: true, 
         }
-    }
-    ]
+    }]
 }, {
     timestamps:true,
 });

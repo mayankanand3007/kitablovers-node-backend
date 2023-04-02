@@ -4,7 +4,7 @@ import {
     getAllBookConditions, 
     updateBookCondition, 
     deleteBookCondition, 
-    getBookCondition} from "../controllers/bookConditionController.js";
+    getBookCondition} from "../controllers/books/bookConditionController.js";
 
 const router = express.Router();
 

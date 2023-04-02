@@ -3,7 +3,7 @@ import {createTag,
     getAllTags, 
     updateTag, 
     deleteTag, 
-    getTag} from "../controllers/tagController.js";
+    getTag} from "../controllers/books/tagController.js";
 
 const router = express.Router();
 

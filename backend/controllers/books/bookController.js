@@ -1,5 +1,5 @@
-import Book from "../models/bookModel.js";
-import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
+import Book from "../../models/books/bookModel.js";
+import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Get All Books
 export const getAllBooks = catchAsyncErrors(async (req, res, next) => {

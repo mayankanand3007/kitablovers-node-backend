@@ -1,5 +1,5 @@
-import tag from "../models/tagModel.js";
-import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
+import tag from "../../models/books/tagModel.js";
+import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Create Tag Model
 export const createTag = catchAsyncErrors(async (req, res, next) => {

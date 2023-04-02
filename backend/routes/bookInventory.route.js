@@ -3,7 +3,7 @@ import {createBooksInventory,
     getAllBooksInventory, 
     updateBooksInventory, 
     deleteBooksInventory, 
-    getBooksInventory} from "../controllers/bookInventoryController.js";
+    getBooksInventory} from "../controllers/books/bookInventoryController.js";
 
 const router = express.Router();
 

@@ -1,5 +1,5 @@
-import warehouseCity from "../models/warehouseCityModel.js";
-import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
+import warehouseCity from "../../models/books/warehouseCityModel.js";
+import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Create Warehouse City
 export const createWarehouseCityInventory = catchAsyncErrors(async (req, res, next) => {

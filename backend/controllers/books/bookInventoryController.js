@@ -1,7 +1,7 @@
-import Book from "../models/bookModel.js";
-import booksInventory from "../models/booksInventoryModel.js";
-import ErrorHandler from "../utils/errorhandler.js";
-import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
+import Book from "../../models/books/bookModel.js";
+import booksInventory from "../../models/books/booksInventoryModel.js";
+import ErrorHandler from "../../utils/errorhandler.js";
+import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 import fs from "fs";
 
 // Create Books Inventory

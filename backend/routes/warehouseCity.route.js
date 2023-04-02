@@ -3,7 +3,7 @@ import {createWarehouseCityInventory,
     getAllWarehouseCities, 
     updateWarehouseCity, 
     deleteWarehouseCity, 
-    getWarehouseCity} from "../controllers/warehouseCityController.js";
+    getWarehouseCity} from "../controllers/books/warehouseCityController.js";
 
 const router = express.Router();
 

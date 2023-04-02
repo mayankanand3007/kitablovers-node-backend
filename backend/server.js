@@ -37,6 +37,9 @@ const connect = async () => {
 import booksInventoryRoute from "./routes/bookInventory.route.js";
 import bookConditionRoute from "./routes/bookCondition.route.js";
 import warehouseCityRoute from "./routes/warehouseCity.route.js";
+import booksetRoute from "./routes/bookset.route.js";
+import surpriseBoxRoute from "./routes/surpriseBox.route.js";
+import merchandiseRoute from "./routes/merchandise.route.js";
 import bookRoute from "./routes/book.route.js";
 import genreRoute from "./routes/genre.route.js";
 import tagRoute from "./routes/tag.route.js";
@@ -250,6 +253,12 @@ app.use("/api/book", bookRoute);
 app.use("/api/tag", tagRoute);
 
 app.use("/api/genre", genreRoute);
+
+app.use("/api/bookset", booksetRoute);
+
+app.use("/api/merchandise", merchandiseRoute);
+
+app.use("/api/surpriseBox", surpriseBoxRoute);
 
 
 app.listen(process.env.PORT,() => {

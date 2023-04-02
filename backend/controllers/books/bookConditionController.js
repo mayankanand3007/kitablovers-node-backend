@@ -1,5 +1,5 @@
-import bookCondition from "../models/bookConditionModel.js";
-import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
+import bookCondition from "../../models/books/bookConditionModel.js";
+import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Create Book Condition
 export const createBookCondition = catchAsyncErrors(async (req, res, next) => {

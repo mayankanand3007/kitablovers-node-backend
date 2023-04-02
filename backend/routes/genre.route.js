@@ -12,7 +12,7 @@ import {createGenreL1,
     getReplaceGenres,
     getReplaceGenresL1,
     getReplaceGenresL2,
-    getReplaceGenresL3} from "../controllers/genreController.js";
+    getReplaceGenresL3} from "../controllers/books/genreController.js";
 
 const router = express.Router();
 

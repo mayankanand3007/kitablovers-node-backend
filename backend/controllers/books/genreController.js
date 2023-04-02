@@ -1,8 +1,8 @@
-import genreL1 from "../models/genrel1Model.js";
-import genreL2 from "../models/genrel2Model.js";
-import genreL3 from "../models/genrel3Model.js";
-import ErrorHandler from "../utils/errorhandler.js";
-import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
+import genreL1 from "../../models/books/genrel1Model.js";
+import genreL2 from "../../models/books/genrel2Model.js";
+import genreL3 from "../../models/books/genrel3Model.js";
+import ErrorHandler from "../../utils/errorhandler.js";
+import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Create L1 Genre
 export const createGenreL1 = catchAsyncErrors(async (req, res, next) => {
