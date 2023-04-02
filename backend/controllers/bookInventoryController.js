@@ -49,7 +49,7 @@ async function createBooksISBN (isbn) {
                     thumbnail: fs.readFileSync(thumbnail_bson),
                     description: book.description,
                     publisher: book.publisher,
-                    publishedDate: book.publishedDate,
+                    publishedOn: book.publishedDate,
                     language: book.language,
                     pageCount: book.pageCount
                 });
@@ -95,7 +95,7 @@ async function createBooksISBN (isbn) {
                     thumbnail: thumbnail_bson,
                     description: book_copy.description,
                     publisher: book_copy.publisher,
-                    publishedDate: book_copy.publishedDate,
+                    publishedOn: book_copy.publishedDate,
                     language: book_copy.language,
                     pageCount: book_copy.pageCount
                 });

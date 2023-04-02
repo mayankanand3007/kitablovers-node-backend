@@ -89,9 +89,12 @@ export const getL1L2Genres = catchAsyncErrors(async (req, res, next) => {
     const genresl1 = await genreL1.find();
     let genres_val = [];
     for (let genreno in genresl1) {
-        let genrel1 = genresl1[genreno];
-        let genresl2 = await genreL2.find({level1:genrel1.id});
-        genres_val.push({genrel1, children:genresl2});
+        const genrel1 = genresl1[genreno];
+        const genresl2 = await genreL2.find({level1:genrel1._id});
+        console.log(genresl2);
+        if (genresl2.length != 0) {
+            genres_val.push({genrel1, children:genresl2});
+        }
     }
     res.status(201).send(genres_val);
 });
@@ -132,7 +135,7 @@ export const getReplaceGenres = catchAsyncErrors(async (req, res, next) => {
     const genrel2 = await genreL2.findById(req.params.id);
     if(genrel2) {
         let genres_val = [];
-        let genresl2 = await genrel2.find();
+        let genresl2 = await genreL2.find({level1: genrel2.level1});
         for (let genreno in genresl2) {
             let check_id = genresl2[genreno]._id;
             if (genrel2._id.equals(check_id)) {
@@ -145,7 +148,7 @@ export const getReplaceGenres = catchAsyncErrors(async (req, res, next) => {
     const genrel3 = await genreL3.findById(req.params.id);
     if(genrel3) {
         let genres_val = [];
-        let genresl3 = await genrel3.find();
+        let genresl3 = await genreL3.find({level2: genrel3.level2});
         for (let genreno in genresl3) {
             let check_id = genresl3[genreno]._id;
             if (genrel3._id.equals(check_id)) {

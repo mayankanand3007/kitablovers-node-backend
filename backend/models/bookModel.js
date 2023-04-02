@@ -37,17 +37,17 @@ const bookSchema = new Schema({
         type: String,
         required: [ true, "Publisher is required."],
     },
-    publishedDate: {
+    publishedOn: {
         type: String,
         required: [ true, "Published Date is required."],
     },
     edition: {
         type: String,
     },
-    language: {
+    language: [{
         type: String,
         required: [ true, "Language is required."],
-    },
+    }],
     pageCount: {
         type: String,
         required: [ true, "Page Count is required."],
@@ -80,11 +80,9 @@ const bookSchema = new Schema({
             type: String,
         }
     }],
-    thickness: [{
-        name: {
-            type: String,
-        }
-    }],
+    thickness: {
+            type: Number,
+    },
     reviews:[{
         user_id:{
             type: String,
