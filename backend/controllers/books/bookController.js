@@ -1,20 +1,30 @@
 import Book from "../../models/books/bookModel.js";
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
+import fs from "fs";
 
 // Get All Books
 export const getAllBooks = catchAsyncErrors(async (req, res, next) => {
     const books = await Book.find();
     let book_resp = [];
     for (let book in books) {
-        all= fs.createWriteStream("out."+imgtype);
-        for(i=0; i<end; i++){
-            var buffer = new Buffer( new Uint8Array(picarray[i]) );
-            all.write(buffer);
-        }
-        all.end();
-        book_resp.push(book._id, book.isbn, book.genre, book.title, book.subtitle, book.author, book.publisher, book.publisher, book.publishedOn, book.language, book.pageCount, book.images, book.tags);
+        book_resp.push(
+            {
+                _id: books[book]._id, 
+                isbn: books[book].isbn, 
+                genre: books[book].genre, 
+                title: books[book].title, 
+                thumbnail: Buffer.from(books[book].thumbnail).toString("base64"),
+                subtitle: books[book].subtitle, 
+                author: books[book].author, 
+                publisher: books[book].publisher,
+                publishedOn: books[book].publishedOn, 
+                language: books[book].language, 
+                pageCount: books[book].pageCount, 
+                iamges: books[book].images, 
+                tags: books[book].tags
+            });
     }
-    res.status(201).send(books);
+    res.status(201).send(book_resp);
 });
 
 // Update Book by ID
