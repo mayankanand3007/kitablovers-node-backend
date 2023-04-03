@@ -6,6 +6,7 @@ export const createBookset = catchAsyncErrors(async (req, res, next) => {
     let bookset_val = {...req.body};
     bookset_val.thumbnail = Buffer.from(req.body.thumbnail, "base64");
     const newBookset = await bookset.create(bookset_val);
+    bookset_val.thumbnail = Buffer.from(req.body.thumbnail).toString("base64");
     res.status(201).json({
         success:true,
         bookset_val
