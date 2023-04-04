@@ -5,7 +5,7 @@ import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 export const createBookset = catchAsyncErrors(async (req, res, next) => {
     let bookset_val = {...req.body};
     bookset_val.thumbnail = Buffer.from(req.body.thumbnail, "base64");
-    const newBookset = await bookset.create(bookset_val);
+    await bookset.create(bookset_val);
     bookset_val.thumbnail = Buffer.from(req.body.thumbnail).toString("base64");
     res.status(201).json({
         success:true,
@@ -35,23 +35,17 @@ export const getAllBooksets = catchAsyncErrors(async (req, res, next) => {
     res.status(201).send(booksets_val);
 });
 
-// Get Book Condition by ID
+// Get Bookset by ID
 export const getBookset = catchAsyncErrors(async (req, res, next) => {
     let booksets = await bookset.findById(req.params.id);
 
     if(!booksets){
         return next(new ErrorHandler("Bookset not found.", 404));
     }
-    thumbnail= fs.createWriteStream("out."+imgtype);
-    for(i=0; i<end; i++){
-        var buffer = new Buffer( new Uint8Array(picarray[i]) );
-        thumbnail.write(buffer);
-    }
-    thumbnail.end();
 
     bookset_val = {
         title: booksets.title,
-        thumbnail: booksets.thumbnail,
+        thumbnail: Buffer.from(booksets.thumbnail).toString("base64"),
         description: booksets.description,
         mrp: booksets.mrp,
         tags: booksets.tags,
@@ -67,7 +61,7 @@ export const getBookset = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
-// Update Book Condition by ID
+// Update Bookset by ID
 export const updateBookset = catchAsyncErrors(async (req, res, next) => {
     let booksets = bookset.findById(req.params.id);
 
@@ -83,7 +77,7 @@ export const updateBookset = catchAsyncErrors(async (req, res, next) => {
 
     bookset_val = {
         title: booksets.title,
-        thumbnail: booksets.thumbnail,
+        thumbnail: Buffer.from(booksets.thumbnail, "base64"),
         description: booksets.description,
         mrp: booksets.mrp,
         tags: booksets.tags,
@@ -100,7 +94,7 @@ export const updateBookset = catchAsyncErrors(async (req, res, next) => {
     
  });
 
-// Delete Book Condition by ID
+// Delete Bookset by ID
 export const deleteBookset = catchAsyncErrors(async (req, res, next) => {
     const booksets = await bookset.findById(req.params.id);
 

@@ -1,6 +1,5 @@
 import Book from "../../models/books/bookModel.js";
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
-import fs from "fs";
 
 // Get All Books
 export const getAllBooks = catchAsyncErrors(async (req, res, next) => {
@@ -17,7 +16,7 @@ export const getAllBooks = catchAsyncErrors(async (req, res, next) => {
                 subtitle: books[book].subtitle, 
                 author: books[book].author, 
                 publisher: books[book].publisher,
-                publishedOn: books[book].publishedOn, 
+                publishedOn: books[book].publishedOn,
                 language: books[book].language, 
                 pageCount: books[book].pageCount, 
                 iamges: books[book].images, 
@@ -32,10 +31,26 @@ export const updateBook = catchAsyncErrors(async (req, res, next) => {
     let books = Book.findById(req.params.id);
 
     if(!books) {
-        return next(new ErrorHandler("Book Condition not found.", 404));
+        return next(new ErrorHandler("Book not found.", 404));
     }
 
-    books = await Book.findByIdAndUpdate(req.params.id,req.body,{
+    let book_val = {
+        _id: req.body._id, 
+        isbn: req.body.isbn, 
+        genre: req.body.genre, 
+        title: req.body.title, 
+        thumbnail: Buffer.from(req.body.thumbnail, "base64"),
+        subtitle: req.body.subtitle, 
+        author: req.body.author, 
+        publisher: req.body.publisher,
+        publishedOn: req.body.publishedOn,
+        language: req.body.language, 
+        pageCount: req.body.pageCount, 
+        iamges: req.body.images, 
+        tags: req.body.tags
+    }
+
+    books = await Book.findByIdAndUpdate(req.params.id,book_val,{
         new:true,
         runValidators:true,
         useFindandModify:false

@@ -32,6 +32,22 @@ const merchandiseSchema = new Schema({
     tags: [{
         type: mongoose.Schema.ObjectId,
         ref: "Tag"
+    }],
+    reviews:[{
+        user_id:{
+            type: String,
+            required: [ true, "User ID is required."],
+        },
+        rating:{
+            type: Number,
+            required: [ true, "Rating is required."],
+            minLength: [1, ""],
+            maxLength: [5, ""]
+        },
+        comment:{
+            type:String,
+            required: true, 
+        }
     }]
 }, {
     timestamps:true,

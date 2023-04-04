@@ -1,22 +1,36 @@
 import surpriseBox from "../../models/surpriseBox/surpriseBoxModel.js";
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
-// Create Book Condition
+// Create Surprise Box
 export const createSurpriseBox = catchAsyncErrors(async (req, res, next) => {
-    const newSurpriseBox = await surpriseBox.create(req.body);
+    let surprise_val = {...req.body};
+    surprise_val.thumbnail = Buffer.from(req.body.thumbnail, "base64");
+    await surpriseBox.create(surprise_val);
+    surprise_val.thumbnail = Buffer.from(req.body.thumbnail).toString("base64");
     res.status(201).json({
         success:true,
-        newSurpriseBox
+        surprise_val
     });
 });
 
-// Get All Book Conditions
+// Get All Surprise Boxes
 export const getAllSurpriseBoxes = catchAsyncErrors(async (req, res, next) => {
     const surpriseBoxes = await surpriseBox.find();
-    res.status(201).send(surpriseBoxes);
+    let surprise_val = []
+    for (let surprise_box in surpriseBoxes) {
+        surprise_val.push(
+            {
+                title: surpriseBoxes[surprise_box].title,
+                thumbnail: Buffer.from(surpriseBoxes[surprise_box].thumbnail).toString("base64"),
+                pricing: surpriseBoxes[surprise_box].pricing,
+                tags: surpriseBoxes[surprise_box].tags
+            }
+        )
+    }
+    res.status(201).send(surprise_val);
 });
 
-// Get Book Condition by ID
+// Get Surprise Box by ID
 export const getSurpriseBox = catchAsyncErrors(async (req, res, next) => {
     const surpriseBoxes = await surpriseBox.findById(req.params.id);
 
@@ -24,13 +38,22 @@ export const getSurpriseBox = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Surprise Box not found.", 404));
     }
 
+    surprise_val = {
+        title: surpriseBoxes.title,
+        thumbnail: Buffer.from(surpriseBoxes.thumbnail).toString("base64"),
+        description: surpriseBoxes.description,
+        pricing: surpriseBoxes.pricing,
+        tags: surpriseBoxes.tags,
+        reviews: surpriseBoxes.reviews
+    }
+
     res.status(200).json({
         success:true,
-        surpriseBoxes
+        surprise_val
     });
 });
 
-// Update Book Condition by ID
+// Update Surprise Box by ID
 export const updateSurpriseBox = catchAsyncErrors(async (req, res, next) => {
     let surpriseBoxes = surpriseBox.findById(req.params.id);
 
@@ -38,7 +61,16 @@ export const updateSurpriseBox = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Surprise Box not found.", 404));
     }
 
-    surpriseBoxes = await surpriseBox.findByIdAndUpdate(req.params.id,req.body,{
+    surpise_val = {
+        title: surpriseBoxes.title,
+        thumbnail: Buffer.from(surpriseBoxes.thumbnail, "base64"),
+        description: surpriseBoxes.description,
+        tags: surpriseBoxes.tags,
+        pricing: surpriseBoxes.pricing,
+        reviews: surpriseBoxes.reviews
+    }
+
+    surpriseBoxes = await surpriseBox.findByIdAndUpdate(req.params.id,surpise_val,{
         new:true,
         runValidators:true,
         useFindandModify:false
@@ -46,12 +78,12 @@ export const updateSurpriseBox = catchAsyncErrors(async (req, res, next) => {
 
     res.status(200).json({
         success:true,
-        surpriseBoxes
+        surpise_val
     });
     
  });
 
-// Delete Book Condition by ID
+// Delete Surprise Box by ID
 export const deleteSurpriseBox = catchAsyncErrors(async (req, res, next) => {
     const surpriseBoxes = await surpriseBox.findById(req.params.id);
 

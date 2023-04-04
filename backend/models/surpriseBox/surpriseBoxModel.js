@@ -24,9 +24,14 @@ const surpriseBoxSchema = new Schema({
         ref: "Tag"
     }],
     pricing: [{
-        book_condition: {
+        genre: {
             type: String,
-            required: [ true, "Book Condition for Price is required."],
+            required: [ true, "Genre for Price is required."],
+        },
+        mrp: {
+            type: Number,
+            required: [ true, "Price is required."],
+            default: 0
         },
         price: {
             type: Number,
