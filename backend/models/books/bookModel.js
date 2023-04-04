@@ -79,7 +79,7 @@ const bookSchema = new Schema({
         type: mongoose.Schema.ObjectId,
         ref: "Tag"
     }],
-    thickness: {
+    weight: {
             type: Number,
     },
     reviews:[{
