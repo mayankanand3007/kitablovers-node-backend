@@ -2,7 +2,6 @@ import Book from "../../models/books/bookModel.js";
 import booksInventory from "../../models/books/booksInventoryModel.js";
 import ErrorHandler from "../../utils/errorhandler.js";
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
-import fs from "fs";
 
 // Create Books Inventory
 export const createBooksInventory = catchAsyncErrors(async (req, res, next) => {
@@ -46,7 +45,7 @@ async function createBooksISBN (isbn) {
                     title: book.title,
                     subtitle: book.subtitle,
                     author: book.authors,
-                    thumbnail: fs.readFileSync(thumbnail_bson),
+                    thumbnail: thumbnail_bson,
                     description: book.description,
                     publisher: book.publisher,
                     publishedOn: book.publishedDate,
