@@ -1,12 +1,12 @@
-import merchandiseCategory from "../../models/merchandise/merchandiseModel.js";
+import merchandiseCategory from "../../models/merchandise/categoryModel.js";
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Create Merchandise Category Model
 export const createMerchandiseCategory = catchAsyncErrors(async (req, res, next) => {
-        const merchandiseCategory = new merchandiseCategories ({
+        const newCategory = new merchandiseCategory ({
             ...req.body,
         });
-        await merchandiseCategory.save();
+        await newCategory.save();
         res.status(201).send("Merchandise Category has been added.");
 });
 
@@ -21,10 +21,7 @@ export const getAllMerchandiseCategories = catchAsyncErrors(async (req, res, nex
                 name: merchandiseCategories[merchCategory].name,
             });
     }
-    res.status(200).json({
-        success:true,
-        merchCategories_resp
-    });
+    res.status(200).json(merchCategories_resp);
 });
 
 
