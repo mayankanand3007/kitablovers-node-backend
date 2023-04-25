@@ -40,6 +40,7 @@ async function createBooksISBN (isbn) {
                 let fig = await fetch(book.imageLinks.thumbnail);
                 thumbnail_bson = Buffer.from(await fig.arrayBuffer());
                 const newBook = new Book({
+                    id: id,
                     isbn: isbn,
                     genre: [0],
                     title: book.title,
@@ -86,6 +87,7 @@ async function createBooksISBN (isbn) {
                     book_copy.pageCount = " ";
                 }
                 const newBook = new Book({
+                    id: id,
                     isbn: isbn,
                     genre: [0],
                     title: book_copy.title,

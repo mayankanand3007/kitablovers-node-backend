@@ -20,6 +20,7 @@ export const getAllMerchandises = catchAsyncErrors(async (req, res, next) => {
     for (let merch in merchs) {
         merch_val.push(
             {
+                id: merchs[merch].id,
                 title: merchs[merch].title,
                 thumbnail: Buffer.from(merchs[merch].thumbnail).toString("base64"),
                 category: merchs[merch].category,
@@ -42,6 +43,7 @@ export const getMerchandise = catchAsyncErrors(async (req, res, next) => {
     }
 
     merch_val = {
+        id: merchandises.id,
         title: merchandises.title,
         thumbnail: Buffer.from(merchandises.thumbnail).toString("base64"),
         description: merchandises.description,

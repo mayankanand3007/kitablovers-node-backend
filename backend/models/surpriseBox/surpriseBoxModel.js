@@ -30,7 +30,7 @@ const surpriseBoxSchema = new Schema({
         },
         mrp: {
             type: Number,
-            required: [ true, "Price is required."],
+            required: [ true, "MRP is required."],
             default: 0
         },
         price: {

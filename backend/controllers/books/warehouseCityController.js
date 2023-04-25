@@ -12,8 +12,16 @@ export const createWarehouseCityInventory = catchAsyncErrors(async (req, res, ne
 
 // Get All Warehouse Cities
 export const getAllWarehouseCities = catchAsyncErrors(async (req, res, next) => {
-        const warehouse_cities = await warehouseCity.find();
-        res.status(201).send(warehouse_cities);
+    const warehouse_cities = await warehouseCity.find();
+    let warehouseCity_resp = [];
+    for (let warehouse_city in warehouse_cities) {
+        warehouseCity_resp.push(
+            {
+                id: warehouse_cities[warehouse_city]._id,
+                name: warehouse_cities[warehouse_city].name,
+            });
+    }
+    res.status(201).send(warehouseCity_resp);
 });
 
 // Get Warehouse City by ID
@@ -62,7 +70,7 @@ export const deleteWarehouseCity = catchAsyncErrors(async (req, res, next) => {
             message:"Warehouse City not found."
         })
     }
-
+    
     await warehouse_cities.remove();
 
     res.status(200).json({

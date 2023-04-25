@@ -10,7 +10,7 @@ const router = express.Router();
 router.get("/", getAllTags);
 router.post("/", createTag);
 router.put("/:id", updateTag)
-router.delete("/:id", deleteTag)
+router.delete("/:id/:replace_id", deleteTag)
 router.get("/:id", getTag);
 
 export default router;

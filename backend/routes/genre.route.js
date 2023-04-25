@@ -29,6 +29,6 @@ router.post("/l1", createGenreL1);
 router.post("/l2", createGenreL2);
 router.post("/l3", createGenreL3);
 router.put("/:id", updateGenre);
-router.delete("/:id", deleteGenre);
+router.delete("/:id/:replace_id", deleteGenre);
 
 export default router;

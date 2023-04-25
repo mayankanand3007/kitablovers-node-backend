@@ -1,4 +1,5 @@
 import bookCondition from "../../models/books/bookConditionModel.js";
+import booksInventory from "../../models/books/booksInventoryModel.js"
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Create Book Condition
@@ -13,7 +14,15 @@ export const createBookCondition = catchAsyncErrors(async (req, res, next) => {
 // Get All Book Conditions
 export const getAllBookConditions = catchAsyncErrors(async (req, res, next) => {
     const books_conditions = await bookCondition.find();
-    res.status(201).send(books_conditions);
+    let bookCond_resp = [];
+    for (let bookCond in books_conditions) {
+        bookCond_resp.push(
+            {
+                id: books_conditions[bookCond].id,
+                name: books_conditions[bookCond].name
+            });
+    }
+    res.status(201).send(bookCond_resp);
 });
 
 
@@ -64,8 +73,11 @@ export const deleteBookCondition = catchAsyncErrors(async (req, res, next) => {
         })
     }
 
-    await book_conditions.remove();
+    const books_inventory = await booksInventory.find();
 
+    
+    await book_conditions.remove();
+    
     res.status(200).json({
         success:true,
         message:"Book Condition deleted successfully."

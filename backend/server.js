@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import errorMiddleware from "./middleware/error.js"
+import errorMiddleware from "./middleware/error.js";
 
 // App Specs
 const app = express();

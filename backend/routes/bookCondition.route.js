@@ -11,7 +11,7 @@ const router = express.Router();
 router.get("/", getAllBookConditions);
 router.post("/", createBookCondition);
 router.put("/:id", updateBookCondition)
-router.delete("/:id", deleteBookCondition)
+router.delete("/:id/:replace_id", deleteBookCondition)
 router.get("/:id", getBookCondition);
 
 export default router;

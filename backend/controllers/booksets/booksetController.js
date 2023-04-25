@@ -20,6 +20,7 @@ export const getAllBooksets = catchAsyncErrors(async (req, res, next) => {
     for (let bookset in booksets) {
         booksets_val.push(
             {
+                id: booksets[bookset].id,
                 title: booksets[bookset].title,
                 thumbnail: Buffer.from(booksets[bookset].thumbnail).toString("base64"),
                 description: booksets[bookset].description,
@@ -44,6 +45,7 @@ export const getBookset = catchAsyncErrors(async (req, res, next) => {
     }
 
     bookset_val = {
+        id: booksets.id,
         title: booksets.title,
         thumbnail: Buffer.from(booksets.thumbnail).toString("base64"),
         description: booksets.description,
@@ -76,6 +78,7 @@ export const updateBookset = catchAsyncErrors(async (req, res, next) => {
     });
 
     bookset_val = {
+        id: booksets.id,
         title: booksets.title,
         thumbnail: Buffer.from(booksets.thumbnail, "base64"),
         description: booksets.description,

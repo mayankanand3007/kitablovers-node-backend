@@ -8,7 +8,7 @@ export const getAllBooks = catchAsyncErrors(async (req, res, next) => {
     for (let book in books) {
         book_resp.push(
             {
-                _id: books[book]._id, 
+                id: books[book].id, 
                 isbn: books[book].isbn, 
                 genre: books[book].genre, 
                 title: books[book].title, 
@@ -31,7 +31,10 @@ export const getAllBooks = catchAsyncErrors(async (req, res, next) => {
                 tags: books[book].tags
             });
     }
-    res.status(201).send(book_resp);
+    res.status(201).json({
+        success:true,
+        book_resp
+    });
 });
 
 // Update Book by ID
@@ -43,12 +46,11 @@ export const updateBook = catchAsyncErrors(async (req, res, next) => {
     }
 
     let book_val = {
-        _id: req.body._id, 
+        id: req.body.id,
         isbn: req.body.isbn, 
         genre: req.body.genre, 
         title: req.body.title, 
-        subtitle: req.body.subtitle, 
-        thumbnail: Buffer.from(req.body.thumbnail, "base64"),
+        subtitle: req.body.subtitle,
         author: req.body.author, 
         description: req.body.description, 
         publisher: req.body.publisher,
@@ -65,6 +67,9 @@ export const updateBook = catchAsyncErrors(async (req, res, next) => {
         images: req.body.images, 
         tags: req.body.tags
     }
+    if(req.body.thumbnail) {
+        book_val.thumbnail = Buffer.from(req.body.thumbnail, "base64");
+    }
 
     books = await Book.findByIdAndUpdate(req.params.id,book_val,{
         new:true,
@@ -74,7 +79,7 @@ export const updateBook = catchAsyncErrors(async (req, res, next) => {
 
     res.status(200).json({
         success:true,
-        books
+        book_val
     });
     
  });

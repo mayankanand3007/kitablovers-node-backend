@@ -13,9 +13,17 @@ export const createTag = catchAsyncErrors(async (req, res, next) => {
 // Get All Tags
 export const getAllTags = catchAsyncErrors(async (req, res, next) => {
     const tags = await tag.find();
+    let bookTag_resp = [];
+    for (let tag in tags) {
+        bookTag_resp.push(
+            {
+                id: tags[tag]._id,
+                name: tags[tag].name,
+            });
+    }
     res.status(200).json({
         success:true,
-        tags
+        bookTag_resp
     });
 });
 
@@ -61,11 +69,11 @@ export const deleteTag = catchAsyncErrors(async (req, res, next) => {
     const tags = await tag.findById(req.params.id);
 
     if(!tags) {
-        return next(new ErrorHandler("Genre ID not found.", 404));
+        return next(new ErrorHandler("Tag ID not found.", 404));
     }
-
+    
     await tags.remove();
-
+    
     res.status(200).json({
         success:true,
         message:"Tag deleted successfully."

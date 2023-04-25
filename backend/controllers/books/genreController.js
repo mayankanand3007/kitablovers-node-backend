@@ -40,6 +40,7 @@ export const createGenreL3 = catchAsyncErrors(async (req, res, next) => {
     //     return next(new ErrorHandler("L2 Genre ID not found.", 404));
     // }
     const newGenre = new genreL3 ({
+        id: req.body.id,
         name: req.body.name,
         level2: req.body.level2_id
     });
@@ -70,7 +71,16 @@ export const getAllGenres = catchAsyncErrors(async (req, res, next) => {
         let parent_genre = await genreL2.findById(genrel3.level2);
         genres_val.push({...genrel3._doc, level_type:3, parent_genre: parent_genre.name});
     }
-    res.status(201).send(genres_val);
+    let bookGenre_resp = [];
+    for (let genreVal in genres_val) {
+        bookGenre_resp.push(
+            {
+                id: genres_val[genreVal]._id,
+                name: genres_val[genreVal].name,
+                level_type: genres_val[genreVal].level_type
+            });
+    }
+    res.status(201).send(bookGenre_resp);
 });
 
 // Get L1 Genres
@@ -223,7 +233,7 @@ export const updateGenre = catchAsyncErrors(async (req, res, next) => {
 
 // Delete Genre by ID
 export const deleteGenre = catchAsyncErrors(async (req, res, next) => {
-    if (!req.body.replace_id) {
+    if (!req.params.replace_id) {
         return next(new ErrorHandler("Replace Id not found.", 404));
     }
     const genrel1_value = await genreL1.findById(req.params.id);
@@ -231,7 +241,7 @@ export const deleteGenre = catchAsyncErrors(async (req, res, next) => {
         const genresl2 = await genreL2.find({level1: genrel1_value._id});
         for(let genreno in genresl2) {
             let genrel2 = genresl2[genreno];
-            genrel2.level1 = req.body.replace_id;
+            genrel2.level1 = req.params.replace_id;
             await genreL2.findByIdAndUpdate(genrel2._id,genrel2, {
                 new:true,
                 runValidators:true,
@@ -249,7 +259,7 @@ export const deleteGenre = catchAsyncErrors(async (req, res, next) => {
         const genresl3 = await genreL3.find({level2: genrel2_value._id});
         for(let genreno in genresl3) {
             let genrel3 = genresl3[genreno];
-            genrel3.level2 = req.body.replace_id;
+            genrel3.level2 = req.params.replace_id;
             await genreL3.findByIdAndUpdate(genrel3._id,genrel3, {
                 new:true,
                 runValidators:true,

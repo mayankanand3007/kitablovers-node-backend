@@ -20,6 +20,7 @@ export const getAllSurpriseBoxes = catchAsyncErrors(async (req, res, next) => {
     for (let surprise_box in surpriseBoxes) {
         surprise_val.push(
             {
+                id: surpriseBoxes[surprise_box].id,
                 title: surpriseBoxes[surprise_box].title,
                 thumbnail: Buffer.from(surpriseBoxes[surprise_box].thumbnail).toString("base64"),
                 pricing: surpriseBoxes[surprise_box].pricing,
@@ -39,6 +40,7 @@ export const getSurpriseBox = catchAsyncErrors(async (req, res, next) => {
     }
 
     surprise_val = {
+        id: surpriseBoxes.id,
         title: surpriseBoxes.title,
         thumbnail: Buffer.from(surpriseBoxes.thumbnail).toString("base64"),
         description: surpriseBoxes.description,
@@ -62,6 +64,7 @@ export const updateSurpriseBox = catchAsyncErrors(async (req, res, next) => {
     }
 
     surpise_val = {
+        id: surpriseBoxes.id,
         title: surpriseBoxes.title,
         thumbnail: Buffer.from(surpriseBoxes.thumbnail, "base64"),
         description: surpriseBoxes.description,
