@@ -43,6 +43,7 @@ import merchandiseRoute from "./routes/merchandise.route.js";
 import bookRoute from "./routes/book.route.js";
 import genreRoute from "./routes/genre.route.js";
 import tagRoute from "./routes/tag.route.js";
+import warehouseCategoryRoute from "./routes/warehouseCategory.route.js";
 
 //Routes
 /**
@@ -259,6 +260,8 @@ app.use("/api/bookset", booksetRoute);
 app.use("/api/merchandise", merchandiseRoute);
 
 app.use("/api/surpriseBox", surpriseBoxRoute);
+
+app.use("/api/warehouseCategory", warehouseCategoryRoute);
 
 
 app.listen(process.env.PORT,() => {
