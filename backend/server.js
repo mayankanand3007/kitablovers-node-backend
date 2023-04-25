@@ -261,7 +261,7 @@ app.use("/api/merchandise", merchandiseRoute);
 
 app.use("/api/surpriseBox", surpriseBoxRoute);
 
-app.use("/api/warehouseCategory", warehouseCategoryRoute);
+app.use("/api/merchandiseCategory", merchandiseCategoryRoute);
 
 
 app.listen(process.env.PORT,() => {
