@@ -110,6 +110,17 @@ async function createBooksISBN (isbn) {
 // Get All Books Inventories
 export const getAllBooksInventory = catchAsyncErrors(async (req, res, next) => {
     const books_inventories = await booksInventory.find();
+    let book_inventory_resp = [];
+    for (let book_inventory in books_inventories) {
+        book_inventory_resp.push(
+            {
+                id: books_inventories[book_inventory].id, 
+                isbn: books_inventories[book_inventory].isbn, 
+                mrp: books_inventories[book_inventory].mrp, 
+                pricing: books_inventories[book_inventory].pricing, 
+                inventory: books_inventories[book_inventory].inventory
+            });
+    }
     res.status(200).json({
         success:true,
         books_inventories

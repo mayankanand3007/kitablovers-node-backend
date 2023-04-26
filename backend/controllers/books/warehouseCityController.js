@@ -27,7 +27,7 @@ export const getAllWarehouseCities = catchAsyncErrors(async (req, res, next) => 
 // Get Warehouse City by ID
 export const getWarehouseCity = catchAsyncErrors(async (req, res, next) => {
     const warehouse_cities = await warehouseCity.findById(req.params.id);
-
+    
     if(!warehouse_cities){
         return next(new ErrorHandler("Warehouse City not found.", 404));
     }

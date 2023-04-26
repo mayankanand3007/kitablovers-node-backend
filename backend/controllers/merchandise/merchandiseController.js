@@ -18,10 +18,18 @@ export const getAllMerchandises = catchAsyncErrors(async (req, res, next) => {
     const merchs = await merchandise.find();
     let merch_val = []
     for (let merch in merchs) {
+        let tag_val = []
+        for( let tag in merchs[merch].tag) {
+            tag_val.push(
+                {"id": tag.id,
+                "name": tag.name}
+            )
+        }
         merch_val.push(
             {
                 id: merchs[merch].id,
                 title: merchs[merch].title,
+                tags: tag_val,
                 thumbnail: Buffer.from(merchs[merch].thumbnail).toString("base64"),
                 category: merchs[merch].category,
                 mrp: merchs[merch].mrp,

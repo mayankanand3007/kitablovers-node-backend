@@ -18,6 +18,13 @@ export const getAllBooksets = catchAsyncErrors(async (req, res, next) => {
     const booksets = await bookset.find();
     let booksets_val = []
     for (let bookset in booksets) {
+        let tag_val = []
+        for( let tag in booksets[bookset].tag) {
+            tag_val.push(
+                {"id": tag.id,
+                "name": tag.name}
+            )
+        }
         booksets_val.push(
             {
                 id: booksets[bookset].id,
@@ -25,7 +32,7 @@ export const getAllBooksets = catchAsyncErrors(async (req, res, next) => {
                 thumbnail: Buffer.from(booksets[bookset].thumbnail).toString("base64"),
                 description: booksets[bookset].description,
                 mrp: booksets[bookset].mrp,
-                tags: booksets[bookset].tags,
+                tags: tag_val,
                 book_count: booksets[bookset].book_count,
                 pricing: booksets[bookset].pricing,
                 inventory: booksets[bookset].inventory,

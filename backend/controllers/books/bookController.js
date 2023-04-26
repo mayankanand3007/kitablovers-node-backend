@@ -6,6 +6,13 @@ export const getAllBooks = catchAsyncErrors(async (req, res, next) => {
     const books = await Book.find();
     let book_resp = [];
     for (let book in books) {
+        let tag_val = []
+        for( let tag in books[book].tag) {
+            tag_val.push(
+                {"id": tag.id,
+                "name": tag.name}
+            )
+        }
         book_resp.push(
             {
                 id: books[book].id, 
@@ -28,7 +35,7 @@ export const getAllBooks = catchAsyncErrors(async (req, res, next) => {
                 spineWidth: books[book].spineWidth, 
                 weight: books[book].weight, 
                 images: books[book].images, 
-                tags: books[book].tags
+                tags : tag_val
             });
     }
     res.status(201).json({

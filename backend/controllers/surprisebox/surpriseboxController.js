@@ -18,13 +18,20 @@ export const getAllSurpriseBoxes = catchAsyncErrors(async (req, res, next) => {
     const surpriseBoxes = await surpriseBox.find();
     let surprise_val = []
     for (let surprise_box in surpriseBoxes) {
+        let tag_val = []
+        for( let tag in surpriseBoxes[boosurprise_boxk].tag) {
+            tag_val.push(
+                {"id": tag.id,
+                "name": tag.name}
+            )
+        }
         surprise_val.push(
             {
                 id: surpriseBoxes[surprise_box].id,
                 title: surpriseBoxes[surprise_box].title,
                 thumbnail: Buffer.from(surpriseBoxes[surprise_box].thumbnail).toString("base64"),
                 pricing: surpriseBoxes[surprise_box].pricing,
-                tags: surpriseBoxes[surprise_box].tags
+                tags: tag_val
             }
         )
     }

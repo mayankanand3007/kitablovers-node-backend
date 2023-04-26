@@ -10,7 +10,6 @@ app.use(cors());
 app.options('*', cors());
 app.use(errorMiddleware);
 
-
 // ENV Config
 import dotenv from "dotenv";
 dotenv.config();
