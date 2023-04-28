@@ -19,7 +19,7 @@ export const getAllSurpriseBoxes = catchAsyncErrors(async (req, res, next) => {
     let surprise_val = []
     for (let surprise_box in surpriseBoxes) {
         let tag_val = []
-        for( let tag in surpriseBoxes[boosurprise_boxk].tag) {
+        for( let tag in surpriseBoxes[surprise_box].tag) {
             tag_val.push(
                 {"id": tag.id,
                 "name": tag.name}

@@ -84,7 +84,7 @@ export const updateBookset = catchAsyncErrors(async (req, res, next) => {
         useFindandModify:false
     });
 
-    bookset_val = {
+    let bookset_val = {
         id: booksets.id,
         title: booksets.title,
         thumbnail: Buffer.from(booksets.thumbnail, "base64"),
