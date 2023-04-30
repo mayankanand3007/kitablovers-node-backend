@@ -51,7 +51,7 @@ export const getBookset = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Bookset not found.", 404));
     }
 
-    bookset_val = {
+    let bookset_val = {
         id: booksets.id,
         title: booksets.title,
         thumbnail: Buffer.from(booksets.thumbnail).toString("base64"),

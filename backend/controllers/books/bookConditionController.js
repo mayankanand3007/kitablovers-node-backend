@@ -74,7 +74,6 @@ export const deleteBookCondition = catchAsyncErrors(async (req, res, next) => {
     }
 
     const books_inventory = await booksInventory.find();
-
     
     await book_conditions.remove();
     
