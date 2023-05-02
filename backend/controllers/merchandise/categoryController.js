@@ -1,4 +1,5 @@
 import merchandiseCategory from "../../models/merchandise/categoryModel.js";
+import merchandise from "../../models/merchandise/merchandiseModel.js";
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Create Merchandise Category Model
@@ -69,6 +70,8 @@ export const deleteMerchandiseCategory = catchAsyncErrors(async (req, res, next)
         return next(new ErrorHandler("Merchandise Category ID not found.", 404));
     }
     
+    let merchandises = await merchandise.find({"category":req.params.id});
+
     await merchandiseCategories.remove();
     
     res.status(200).json({

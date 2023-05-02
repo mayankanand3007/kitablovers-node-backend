@@ -85,7 +85,7 @@ export const updateSurpriseBox = catchAsyncErrors(async (req, res, next) => {
         runValidators:true,
         useFindandModify:false
     });
-
+    
     res.status(200).json({
         success:true,
         surpise_val

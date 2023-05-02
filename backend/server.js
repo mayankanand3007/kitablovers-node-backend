@@ -43,6 +43,7 @@ import bookRoute from "./routes/book.route.js";
 import genreRoute from "./routes/genre.route.js";
 import tagRoute from "./routes/tag.route.js";
 import merchandiseCategoryRoute from "./routes/merchandiseCategory.route.js";
+import giftWrapPriceRoute from "./routes/giftWrapPrice.route.js";
 
 //Routes
 /**
@@ -261,6 +262,8 @@ app.use("/api/merchandise", merchandiseRoute);
 app.use("/api/surpriseBox", surpriseBoxRoute);
 
 app.use("/api/merchandiseCategory", merchandiseCategoryRoute);
+
+app.use("/api/giftWrapPrice", giftWrapPriceRoute);
 
 
 app.listen(process.env.PORT,() => {

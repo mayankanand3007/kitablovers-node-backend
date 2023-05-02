@@ -6,6 +6,10 @@ const merchandiseSchema = new Schema({
         type: String,
         required: [ true, "Book Set Title is required."],
     },
+    category: [{
+        type: mongoose.Schema.ObjectId,
+        ref: "MerchandiseCategory"
+    }],
     thumbnail: {
         type: Buffer,
         required: true,
