@@ -18,12 +18,15 @@ export const getAllMerchandises = catchAsyncErrors(async (req, res, next) => {
     const merchs = await merchandise.find();
     let merch_val = []
     for (let merch in merchs) {
-        let tag_val = []
-        for( let tag in merchs[merch].tag) {
-            tag_val.push(
-                {"id": tag.id,
-                "name": tag.name}
-            )
+        let tag_val = [];
+        let tag_data = merchs[merch].tags;
+        if (tag_data.length != 0) {
+            for( let tag in tag_data) {
+                let tag_val_data = await tagmodel.findById(tag_data[tag]);
+                tag_val.push(
+                    tag_val_data
+                )
+            }
         }
         merch_val.push(
             {
@@ -53,6 +56,7 @@ export const getMerchandise = catchAsyncErrors(async (req, res, next) => {
     merch_val = {
         id: merchandises.id,
         title: merchandises.title,
+        category: merchandises.category,
         thumbnail: Buffer.from(merchandises.thumbnail).toString("base64"),
         description: merchandises.description,
         mrp: merchandises.mrp,
@@ -76,11 +80,21 @@ export const updateMerchandise = catchAsyncErrors(async (req, res, next) => {
     if(!merchandises) {
         return next(new ErrorHandler("Merchandise not found.", 404));
     }
+    
+    let merch_val = {...req.body};
+    merch_val.thumbnail = Buffer.from(req.body.thumbnail, "base64");
+    
+    merchandises = await merchandise.findByIdAndUpdate(req.params.id, merch_val, {
+        new:true,
+        runValidators:true,
+        useFindandModify:false
+    });
 
     merch_val = {
         title: merchandises.title,
-        thumbnail: Buffer.from(merchandises.thumbnail, "base64"),
+        thumbnail: Buffer.from(merchandises.thumbnail).toString("base64"),
         description: merchandises.description,
+        category: merchandises.category,
         mrp: merchandises.mrp,
         tags: merchandises.tags,
         book_count: merchandises.book_count,
@@ -89,12 +103,7 @@ export const updateMerchandise = catchAsyncErrors(async (req, res, next) => {
         reviews: merchandises.reviews
     }
 
-    merchandises = await merchandise.findByIdAndUpdate(req.params.id,merch_val,{
-        new:true,
-        runValidators:true,
-        useFindandModify:false
-    });
-
+    
     res.status(200).json({
         success:true,
         merch_val
@@ -112,7 +121,7 @@ export const deleteMerchandise = catchAsyncErrors(async (req, res, next) => {
             message:"Merchandise not found."
         });
     }
-
+    
     await merchandises.remove();
     
     res.status(200).json({

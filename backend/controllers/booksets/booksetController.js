@@ -1,4 +1,5 @@
 import bookset from "../../models/booksets/booksetModel.js";
+import tagmodel from "../../models/books/tagModel.js"
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Create Bookset
@@ -16,14 +17,17 @@ export const createBookset = catchAsyncErrors(async (req, res, next) => {
 // Get All Booksets
 export const getAllBooksets = catchAsyncErrors(async (req, res, next) => {
     const booksets = await bookset.find();
-    let booksets_val = []
+    let booksets_val = [];
     for (let bookset in booksets) {
-        let tag_val = []
-        for( let tag in booksets[bookset].tag) {
-            tag_val.push(
-                {"id": tag.id,
-                "name": tag.name}
-            )
+        let tag_val = [];
+        let tag_data = booksets[bookset].tags;
+        if (tag_data.length != 0) {
+            for( let tag in tag_data) {
+                let tag_val_data = await tagmodel.findById(tag_data[tag]);
+                tag_val.push(
+                    tag_val_data
+                )
+            }
         }
         booksets_val.push(
             {
@@ -38,7 +42,7 @@ export const getAllBooksets = catchAsyncErrors(async (req, res, next) => {
                 inventory: booksets[bookset].inventory,
                 reviews: booksets[bookset].reviews
             }
-        )
+        );
     }
     res.status(201).send(booksets_val);
 });
@@ -78,16 +82,19 @@ export const updateBookset = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Bookset not found.", 404));
     }
 
-    booksets = await bookset.findByIdAndUpdate(req.params.id,req.body,{
+    let bookset_fetch_val = {...req.body};
+    bookset_val.thumbnail = Buffer.from(req.body.thumbnail, "base64");
+
+    booksets = await bookset.findByIdAndUpdate(req.params.id,bookset_fetch_val,{
         new:true,
         runValidators:true,
         useFindandModify:false
     });
-
+    
     let bookset_val = {
         id: booksets.id,
         title: booksets.title,
-        thumbnail: Buffer.from(booksets.thumbnail, "base64"),
+        thumbnail: Buffer.from(booksets.thumbnail).toString("base64"),
         description: booksets.description,
         mrp: booksets.mrp,
         tags: booksets.tags,

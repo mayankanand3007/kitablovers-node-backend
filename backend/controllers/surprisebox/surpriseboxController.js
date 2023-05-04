@@ -18,12 +18,15 @@ export const getAllSurpriseBoxes = catchAsyncErrors(async (req, res, next) => {
     const surpriseBoxes = await surpriseBox.find();
     let surprise_val = []
     for (let surprise_box in surpriseBoxes) {
-        let tag_val = []
-        for( let tag in surpriseBoxes[surprise_box].tag) {
-            tag_val.push(
-                {"id": tag.id,
-                "name": tag.name}
-            )
+        let surprise_box_val = [];
+        let surprise_box_data = surpriseBoxes[surprise_box].tags;
+        if (surprise_box_data.length != 0) {
+            for( let surprise_box in surprise_box_data) {
+                let surprise_box_val = await tagmodel.findById(surpriseBoxes[surprise_box]);
+                surprise_box_val.push(
+                    surprise_box_data
+                )
+            }
         }
         surprise_val.push(
             {
@@ -31,9 +34,9 @@ export const getAllSurpriseBoxes = catchAsyncErrors(async (req, res, next) => {
                 title: surpriseBoxes[surprise_box].title,
                 thumbnail: Buffer.from(surpriseBoxes[surprise_box].thumbnail).toString("base64"),
                 pricing: surpriseBoxes[surprise_box].pricing,
-                tags: tag_val
+                tags: surprise_box_val
             }
-        )
+        );
     }
     res.status(201).send(surprise_val);
 });
@@ -46,7 +49,7 @@ export const getSurpriseBox = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Surprise Box not found.", 404));
     }
 
-    surprise_val = {
+    const resp = {
         id: surpriseBoxes.id,
         title: surpriseBoxes.title,
         thumbnail: Buffer.from(surpriseBoxes.thumbnail).toString("base64"),
@@ -58,7 +61,7 @@ export const getSurpriseBox = catchAsyncErrors(async (req, res, next) => {
 
     res.status(200).json({
         success:true,
-        surprise_val
+        resp
     });
 });
 
@@ -70,21 +73,25 @@ export const updateSurpriseBox = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Surprise Box not found.", 404));
     }
 
+    let surprise_val = {...req.body};
+    surprise_val.thumbnail = Buffer.from(req.body.thumbnail, "base64");
+
+    surpriseBoxes = await surpriseBox.findByIdAndUpdate(req.params.id,surprise_val,{
+        new:true,
+        runValidators:true,
+        useFindandModify:false
+    });
+
     surpise_val = {
         id: surpriseBoxes.id,
         title: surpriseBoxes.title,
-        thumbnail: Buffer.from(surpriseBoxes.thumbnail, "base64"),
+        thumbnail: Buffer.from(surpriseBoxes.thumbnail).toString("base64"),
         description: surpriseBoxes.description,
         tags: surpriseBoxes.tags,
         pricing: surpriseBoxes.pricing,
         reviews: surpriseBoxes.reviews
     }
 
-    surpriseBoxes = await surpriseBox.findByIdAndUpdate(req.params.id,surpise_val,{
-        new:true,
-        runValidators:true,
-        useFindandModify:false
-    });
     
     res.status(200).json({
         success:true,
