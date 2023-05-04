@@ -53,14 +53,24 @@ export const getMerchandise = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Merchandise not found.", 404));
     }
 
-    merch_val = {
+    let tag_val = [];
+    let tag_data = merchandises.tags;
+    if (tag_data.length != 0) {
+        for( let tag in tag_data) {
+            let tag_val_data = await tagmodel.findById(tag_data[tag]);
+            tag_val.push(
+                tag_val_data
+            )
+        }
+    }
+    let merch_val = {
         id: merchandises.id,
         title: merchandises.title,
         category: merchandises.category,
         thumbnail: Buffer.from(merchandises.thumbnail).toString("base64"),
         description: merchandises.description,
         mrp: merchandises.mrp,
-        tags: merchandises.tags,
+        tags: tag_val,
         book_count: merchandises.book_count,
         pricing: merchandises.pricing,
         inventory: merchandises.inventory,

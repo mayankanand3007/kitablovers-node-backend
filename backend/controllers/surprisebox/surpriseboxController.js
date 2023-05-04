@@ -82,12 +82,22 @@ export const updateSurpriseBox = catchAsyncErrors(async (req, res, next) => {
         useFindandModify:false
     });
 
-    surpise_val = {
+    let surprise_box_val = [];
+    let surprise_box_data = surpriseBoxes.tags;
+    if (surprise_box_data.length != 0) {
+        for( let surprise_box in surprise_box_data) {
+            let surprise_box_val = await tagmodel.findById(surpriseBoxes[surprise_box]);
+            surprise_box_val.push(
+                surprise_box_data
+            )
+        }
+    }
+    let surpise_val = {
         id: surpriseBoxes.id,
         title: surpriseBoxes.title,
         thumbnail: Buffer.from(surpriseBoxes.thumbnail).toString("base64"),
         description: surpriseBoxes.description,
-        tags: surpriseBoxes.tags,
+        tags: surprise_box_val,
         pricing: surpriseBoxes.pricing,
         reviews: surpriseBoxes.reviews
     }

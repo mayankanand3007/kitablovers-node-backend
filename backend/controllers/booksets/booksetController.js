@@ -55,13 +55,23 @@ export const getBookset = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Bookset not found.", 404));
     }
 
+    let tag_val = [];
+    let tag_data = booksets.tags;
+    if (tag_data.length != 0) {
+        for( let tag in tag_data) {
+            let tag_val_data = await tagmodel.findById(tag_data[tag]);
+            tag_val.push(
+                tag_val_data
+            )
+        }
+    }
     let bookset_val = {
         id: booksets.id,
         title: booksets.title,
         thumbnail: Buffer.from(booksets.thumbnail).toString("base64"),
         description: booksets.description,
         mrp: booksets.mrp,
-        tags: booksets.tags,
+        tags: tag_val,
         book_count: booksets.book_count,
         pricing: booksets.pricing,
         inventory: booksets.inventory,
@@ -83,7 +93,7 @@ export const updateBookset = catchAsyncErrors(async (req, res, next) => {
     }
 
     let bookset_fetch_val = {...req.body};
-    bookset_val.thumbnail = Buffer.from(req.body.thumbnail, "base64");
+    bookset_fetch_val.thumbnail = Buffer.from(req.body.thumbnail, "base64");
 
     booksets = await bookset.findByIdAndUpdate(req.params.id,bookset_fetch_val,{
         new:true,
