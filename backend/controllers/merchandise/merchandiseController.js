@@ -1,4 +1,5 @@
 import merchandise from "../../models/merchandise/merchandiseModel.js";
+import tagmodel from "../../models/books/tagModel.js";
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Create Merchandise
