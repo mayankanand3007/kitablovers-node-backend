@@ -44,6 +44,45 @@ export const getAllBooks = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
+// Get Books by ID.
+export const getBook = catchAsyncErrors(async (req, res, next) => {
+    const books = await Book.findById(req.params.id);
+    let tag_val = []
+    for( let tag in books.tag) {
+        tag_val.push(
+            {"id": tag.id,
+            "name": tag.name}
+        )
+    }
+    let resp = {
+        id: books.id, 
+        isbn: books.isbn, 
+        genre: books.genre, 
+        title: books.title, 
+        subtitle: books.subtitle, 
+        thumbnail: Buffer.from(books.thumbnail).toString("base64"),
+        author: books.author, 
+        description: books.description, 
+        publisher: books.publisher,
+        publishedOn: books.publishedOn,
+        edition: books.edition, 
+        language: books.language, 
+        pageCount: books.pageCount, 
+        ageGroup: books.ageGroup, 
+        binding: books.binding, 
+        height: books.height, 
+        width: books.width, 
+        spineWidth: books.spineWidth, 
+        weight: books.weight, 
+        images: books.images, 
+        tags : tag_val
+    }
+    res.status(200).json({
+        success:true,
+        resp
+    });
+});
+
 // Update Book by ID
 export const updateBook = catchAsyncErrors(async (req, res, next) => {
     let books = Book.findById(req.params.id);

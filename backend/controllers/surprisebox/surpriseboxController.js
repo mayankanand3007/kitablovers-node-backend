@@ -19,13 +19,13 @@ export const getAllSurpriseBoxes = catchAsyncErrors(async (req, res, next) => {
     const surpriseBoxes = await surpriseBox.find();
     let surprise_val = []
     for (let surprise_box in surpriseBoxes) {
-        let surprise_box_val = [];
-        let surprise_box_data = surpriseBoxes[surprise_box].tags;
-        if (surprise_box_data.length != 0) {
-            for( let surprise_box in surprise_box_data) {
-                let surprise_box_val = await tagmodel.findById(surpriseBoxes[surprise_box]);
-                surprise_box_val.push(
-                    surprise_box_data
+        let tag_val = [];
+        let tag_data = surpriseBoxes[surprise_box].tags;
+        if (tag_data.length != 0) {
+            for( let tag in tag_data) {
+                let tag_val_data = await tagmodel.findById(tag_data[tag]);
+                tag_val.push(
+                    tag_val_data
                 )
             }
         }
@@ -35,11 +35,14 @@ export const getAllSurpriseBoxes = catchAsyncErrors(async (req, res, next) => {
                 title: surpriseBoxes[surprise_box].title,
                 thumbnail: Buffer.from(surpriseBoxes[surprise_box].thumbnail).toString("base64"),
                 pricing: surpriseBoxes[surprise_box].pricing,
-                tags: surprise_box_val
+                tags: tag_val
             }
         );
     }
-    res.status(201).send(surprise_val);
+    res.status(200).json({
+        success:true,
+        surprise_val
+    });
 });
 
 // Get Surprise Box by ID
@@ -50,13 +53,23 @@ export const getSurpriseBox = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Surprise Box not found.", 404));
     }
 
+    let tag_val = [];
+    let tag_data = surpriseBoxes.tags;
+    if (tag_data.length != 0) {
+        for( let tag in tag_data) {
+            let tag_val_data = await tagmodel.findById(tag_data[tag]);
+            tag_val.push(
+                tag_val_data
+            )
+        }
+    }
     const resp = {
         id: surpriseBoxes.id,
         title: surpriseBoxes.title,
         thumbnail: Buffer.from(surpriseBoxes.thumbnail).toString("base64"),
         description: surpriseBoxes.description,
         pricing: surpriseBoxes.pricing,
-        tags: surpriseBoxes.tags,
+        tags: tag_val,
         reviews: surpriseBoxes.reviews
     }
 
@@ -104,7 +117,7 @@ export const updateSurpriseBox = catchAsyncErrors(async (req, res, next) => {
     }
 
     
-    res.status(200).json({
+    res.status(204).json({
         success:true,
         surpise_val
     });
@@ -124,7 +137,7 @@ export const deleteSurpriseBox = catchAsyncErrors(async (req, res, next) => {
 
     await surpriseBoxes.remove();
     
-    res.status(200).json({
+    res.status(204).json({
         success:true,
         message:"Surprise Box deleted successfully."
     });

@@ -1,5 +1,5 @@
 import bookset from "../../models/booksets/booksetModel.js";
-import tagmodel from "../../models/books/tagModel.js"
+import tagmodel from "../../models/books/tagModel.js";
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Create Bookset
