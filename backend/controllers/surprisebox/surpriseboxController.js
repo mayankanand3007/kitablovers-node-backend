@@ -137,7 +137,7 @@ export const deleteSurpriseBox = catchAsyncErrors(async (req, res, next) => {
 
     await surpriseBoxes.remove();
     
-    res.status(204).json({
+    res.status(201).json({
         success:true,
         message:"Surprise Box deleted successfully."
     });
