@@ -75,10 +75,20 @@ export const getMerchandise = catchAsyncErrors(async (req, res, next) => {
             )
         }
     }
+    let category_val = [];
+    let category_data = merchs[merch].category;
+    if (category_data.length != 0) {
+        for( let category in category_data) {
+            let category_val_data = await categorymodel.findById(category_data[category]);
+            category_val.push(
+                category_val_data
+            )
+        }
+    }
     let merch_val = {
         id: merchandises.id,
         title: merchandises.title,
-        category: merchandises.category,
+        category: category_val,
         thumbnail: Buffer.from(merchandises.thumbnail).toString("base64"),
         description: merchandises.description,
         mrp: merchandises.mrp,
