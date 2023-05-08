@@ -1,5 +1,6 @@
 import merchandise from "../../models/merchandise/merchandiseModel.js";
 import tagmodel from "../../models/books/tagModel.js";
+import categorymodel from "../../models/merchandise/categoryModel.js"
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
 // Create Merchandise
@@ -29,13 +30,23 @@ export const getAllMerchandises = catchAsyncErrors(async (req, res, next) => {
                 )
             }
         }
+        let category_val = [];
+        let category_data = merchs[merch].category;
+        if (category_data.length != 0) {
+            for( let category in category_data) {
+                let category_val_data = await categorymodel.findById(category_data[category]);
+                category_val.push(
+                    category_val_data
+                )
+            }
+        }
         merch_val.push(
             {
                 id: merchs[merch].id,
                 title: merchs[merch].title,
                 tags: tag_val,
                 thumbnail: Buffer.from(merchs[merch].thumbnail).toString("base64"),
-                category: merchs[merch].category,
+                category: category_val,
                 mrp: merchs[merch].mrp,
                 price: merchs[merch].price,
                 quantity: merchs[merch].quantity,
