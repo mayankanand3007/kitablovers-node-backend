@@ -124,6 +124,9 @@ export const updateMerchandise = catchAsyncErrors(async (req, res, next) => {
         tags: merchandises.tags,
         book_count: merchandises.book_count,
         pricing: merchandises.pricing,
+        price: merchandises.price,
+        location: merchandises.location,
+        quantity: merchandises.quantity,
         inventory: merchandises.inventory,
         reviews: merchandises.reviews
     }
