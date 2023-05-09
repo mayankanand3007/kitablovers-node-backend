@@ -25,7 +25,6 @@ export const getAllBookConditions = catchAsyncErrors(async (req, res, next) => {
     res.status(201).send(bookCond_resp);
 });
 
-
 // Get Book Condition by ID
 export const getBookCondition = catchAsyncErrors(async (req, res, next) => {
     const book_conditions = await bookCondition.findById(req.params.id);

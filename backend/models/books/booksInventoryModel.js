@@ -16,8 +16,8 @@ const booksInventorySchema = new Schema({
     },
     pricing: [{
         book_condition: {
-            type: String,
-            required: [ true, "Book Condition for Price is required."],
+            type: mongoose.Schema.ObjectId,
+            ref: "BookCondition"
         },
         price: {
             type: Number,
@@ -27,12 +27,12 @@ const booksInventorySchema = new Schema({
     }],
     inventory:[{
         book_condition: {
-            type: String,
-            required: [ true, "Book Condition for Inventory is required."],
+            type: mongoose.Schema.ObjectId,
+            ref: "BookCondition"
         },
         city: {
-            type: String,
-            required: [ true, "Warehouse City is required."],
+            type: mongoose.Schema.ObjectId,
+            ref: "WarehouseCity"
         },
         quantity: {
             type: Number,
