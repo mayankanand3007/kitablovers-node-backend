@@ -177,7 +177,7 @@ export const updateMRPBooksInventory = catchAsyncErrors(async (req, res, next) =
         inventory: booksInventory.inventory
     }
 
-    books_inventories = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val,{
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val,{
         new:true,
         runValidators:true,
         useFindandModify:false
@@ -185,27 +185,29 @@ export const updateMRPBooksInventory = catchAsyncErrors(async (req, res, next) =
 
     res.status(200).json({
         success:true,
-        books_inventories
+        resp
     });
 
 });
 
 // Add Pricing in Books Inventory by ID
 export const addPricingBooksInventory = catchAsyncErrors(async (req, res, next) => {
-    let books_inventories = booksInventory.findById(req.params.id);
+    let books_inventories = await booksInventory.findById(req.params.id);
 
     if(!books_inventories) {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
 
+    books_inventories.pricing.push(req.body);
+
     const books_inventories_val = {
-        isbn: booksInventory.isbn,
-        mrp: booksInventory.mrp, 
-        pricing: booksInventory.pricing.push(...req.body.pricing),
-        inventory: booksInventory.inventory
+        isbn: books_inventories.isbn,
+        mrp: books_inventories.mrp, 
+        pricing: books_inventories.pricing,
+        inventory: books_inventories.inventory
     }
 
-    books_inventories = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val,{
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val,{
         new:true,
         runValidators:true,
         useFindandModify:false
@@ -213,7 +215,7 @@ export const addPricingBooksInventory = catchAsyncErrors(async (req, res, next) 
 
     res.status(200).json({
         success:true,
-        books_inventories
+        resp
     });
 
  });
@@ -248,20 +250,22 @@ export const updatePricingBooksInventory = catchAsyncErrors(async (req, res, nex
 
  // Add Inventory in Books Inventory by ID
 export const addInventoryBooksInventory = catchAsyncErrors(async (req, res, next) => {
-    let books_inventories = booksInventory.findById(req.params.id);
+    let books_inventories = await booksInventory.findById(req.params.id);
 
     if(!books_inventories) {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
 
+    books_inventories.inventory.push(req.body);
+
     const books_inventories_val = {
         isbn: booksInventory.isbn,
         mrp: booksInventory.mrp, 
         pricing: booksInventory.pricing, 
-        inventory: booksInventory.inventory.push(...req.body.inventory)
+        inventory: books_inventories.inventory
     }
     
-    books_inventories = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val,{
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val,{
         new:true,
         runValidators:true,
         useFindandModify:false
@@ -269,7 +273,7 @@ export const addInventoryBooksInventory = catchAsyncErrors(async (req, res, next
 
     res.status(200).json({
         success:true,
-        books_inventories
+        resp
     });
 
  });
