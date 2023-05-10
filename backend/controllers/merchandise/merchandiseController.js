@@ -128,25 +128,25 @@ export const updateMerchandise = catchAsyncErrors(async (req, res, next) => {
         useFindandModify:false
     });
 
-    // let resp = {
-    //     title: merchandises.title,
-    //     thumbnail: Buffer.from(merchandises.thumbnail).toString("base64"),
-    //     description: merchandises.description,
-    //     category: merchandises.category,
-    //     mrp: merchandises.mrp,
-    //     tags: merchandises.tags,
-    //     book_count: merchandises.book_count,
-    //     pricing: merchandises.pricing,
-    //     price: merchandises.price,
-    //     location: merchandises.location,
-    //     quantity: merchandises.quantity,
-    //     inventory: merchandises.inventory,
-    //     reviews: merchandises.reviews
-    // }
+    let resp = {
+        title: merchandises.title,
+        thumbnail: Buffer.from(merchandises.thumbnail).toString("base64"),
+        description: merchandises.description,
+        category: merchandises.category,
+        mrp: merchandises.mrp,
+        tags: merchandises.tags,
+        book_count: merchandises.book_count,
+        pricing: merchandises.pricing,
+        price: merchandises.price,
+        location: merchandises.location,
+        quantity: merchandises.quantity,
+        inventory: merchandises.inventory,
+        reviews: merchandises.reviews
+    }
 
     res.status(201).json({
         success:true,
-        merchandises
+        resp
     });
     
  });
