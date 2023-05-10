@@ -87,7 +87,6 @@ async function createBooksISBN (isbn) {
                     book_copy.pageCount = " ";
                 }
                 const newBook = new Book({
-                    id: id,
                     isbn: isbn,
                     genre: [0],
                     title: book_copy.title,
