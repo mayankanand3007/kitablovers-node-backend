@@ -1,22 +1,22 @@
 import express from "express";
 import {createBooksInventory, 
-    getAllBooksInventory, 
-    updateBooksInventory, 
-    deleteBooksInventory, 
+    getAllBooksInventory,  
     getBooksInventory,
     addPricingBooksInventory,
     addInventoryBooksInventory,
-    updateMRPBooksInventory} from "../controllers/books/bookInventoryController.js";
+    updateMRPBooksInventory,
+    updatePricingBooksInventory,
+    updateInventoryBooksInventory} from "../controllers/books/bookInventoryController.js";
 
 const router = express.Router();
 
 router.get("/", getAllBooksInventory);
 router.post("/", createBooksInventory);
-router.post("/pricing", addPricingBooksInventory);
-router.post("/inventory", addInventoryBooksInventory);
+router.post("/pricing/:id", addPricingBooksInventory);
+router.post("/inventory/:id", addInventoryBooksInventory);
 router.put("/mrp/:id/", updateMRPBooksInventory);
-router.put("/pricing/:id/:pricingid", updateBooksInventory);
-router.put("/inventory/:id/:inventoryid", deleteBooksInventory)
+router.put("/pricing/:id/:pricingid", updatePricingBooksInventory);
+router.put("/inventory/:id/:inventoryid", updateInventoryBooksInventory)
 router.get("/:id", getBooksInventory);
 
 export default router;
