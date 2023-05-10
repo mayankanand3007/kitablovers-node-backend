@@ -201,7 +201,7 @@ export const addPricingBooksInventory = catchAsyncErrors(async (req, res, next) 
     const books_inventories_val = {
         isbn: booksInventory.isbn,
         mrp: booksInventory.mrp, 
-        pricing: [booksInventory.pricing,req.body.pricing], 
+        pricing: booksInventory.pricing.push(...req.body.pricing),
         inventory: booksInventory.inventory
     }
 
@@ -258,7 +258,7 @@ export const addInventoryBooksInventory = catchAsyncErrors(async (req, res, next
         isbn: booksInventory.isbn,
         mrp: booksInventory.mrp, 
         pricing: booksInventory.pricing, 
-        inventory: [booksInventory.inventory,req.body.inventory]
+        inventory: booksInventory.inventory.push(...req.body.inventory)
     }
     
     books_inventories = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val,{
@@ -291,7 +291,7 @@ export const updateInventoryBooksInventory = catchAsyncErrors(async (req, res, n
         }
     }
     
-    books_inventories = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories,{
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories,{
         new:true,
         runValidators:true,
         useFindandModify:false
@@ -299,7 +299,7 @@ export const updateInventoryBooksInventory = catchAsyncErrors(async (req, res, n
 
     res.status(200).json({
         success:true,
-        books_inventories
+        resp
     });
 
  });
