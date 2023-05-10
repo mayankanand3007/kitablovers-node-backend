@@ -76,7 +76,7 @@ export const getMerchandise = catchAsyncErrors(async (req, res, next) => {
         }
     }
     let category_val = [];
-    let category_data = merchs[merch].category;
+    let category_data = merchandises.category;
     if (category_data.length != 0) {
         for( let category in category_data) {
             let category_val_data = await categorymodel.findById(category_data[category]);

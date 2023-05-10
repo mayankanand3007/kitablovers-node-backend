@@ -220,19 +220,20 @@ export const addPricingBooksInventory = catchAsyncErrors(async (req, res, next) 
 
 // Update Pricing in Books Inventory by ID
 export const updatePricingBooksInventory = catchAsyncErrors(async (req, res, next) => {
-    let books_inventories = booksInventory.findById(req.params.id);
+    let books_inventories = await booksInventory.findById(req.params.id);
 
     if(!books_inventories) {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
+    
     for (let each_pricing in books_inventories.pricing) {
-        if (books_inventories.pricing[each_pricing] === req.params.pricingid) {
+        if (books_inventories.pricing[each_pricing].id === req.params.pricingid) {
             books_inventories.pricing[each_pricing].book_condition = req.body.book_condition;
             books_inventories.pricing[each_pricing].price = req.body.price;
         }
     }
 
-    books_inventories = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories,{
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories,{
         new:true,
         runValidators:true,
         useFindandModify:false
@@ -240,7 +241,7 @@ export const updatePricingBooksInventory = catchAsyncErrors(async (req, res, nex
 
     res.status(200).json({
         success:true,
-        books_inventories
+        resp
     });
 
  });
@@ -275,21 +276,21 @@ export const addInventoryBooksInventory = catchAsyncErrors(async (req, res, next
 
  // Update Inventory in Books Inventory by ID
 export const updateInventoryBooksInventory = catchAsyncErrors(async (req, res, next) => {
-    let books_inventories = booksInventory.findById(req.params.id);
+    let books_inventories = await booksInventory.findById(req.params.id);
 
     if(!books_inventories) {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
 
     for (let each_inventory in books_inventories.inventory) {
-        if (books_inventories.inventory[each_inventory] === req.params.inventoryid) {
+        if (books_inventories.inventory[each_inventory].id === req.params.inventoryid) {
             books_inventories.inventory[each_inventory].book_condition = req.body.book_condition;
             books_inventories.inventory[each_inventory].city = req.body.city;
             books_inventories.inventory[each_inventory].quantity = req.body.quantity;
             books_inventories.inventory[each_inventory].location = req.body.location;
         }
     }
-
+    
     books_inventories = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories,{
         new:true,
         runValidators:true,
