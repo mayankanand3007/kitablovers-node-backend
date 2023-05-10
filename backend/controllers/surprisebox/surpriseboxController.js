@@ -96,28 +96,30 @@ export const updateSurpriseBox = catchAsyncErrors(async (req, res, next) => {
         useFindandModify:false
     });
 
-    let surprise_box_val = [];
-    let surprise_box_data = surpriseBoxes.tags;
-    if (surprise_box_data.length != 0) {
-        for( let surprise_box in surprise_box_data) {
-            let surprise_box_val = await tagmodel.findById(surpriseBoxes[surprise_box]);
-            surprise_box_val.push(
-                surprise_box_data
+    
+    let tag_val = [];
+    let tag_data = surpriseBoxes.tags;
+    if (tag_data.length != 0) {
+        for( let tag in tag_data) {
+            let tag_val_data = await tagmodel.findById(tag_data[tag]);
+            tag_val.push(
+                tag_val_data
             )
         }
     }
+
     let surpise_val = {
         id: surpriseBoxes.id,
         title: surpriseBoxes.title,
         thumbnail: Buffer.from(surpriseBoxes.thumbnail).toString("base64"),
         description: surpriseBoxes.description,
-        tags: surprise_box_val,
+        tags: tag_val,
         pricing: surpriseBoxes.pricing,
         reviews: surpriseBoxes.reviews
     }
 
     
-    res.status(204).json({
+    res.status(201).json({
         success:true,
         surpise_val
     });

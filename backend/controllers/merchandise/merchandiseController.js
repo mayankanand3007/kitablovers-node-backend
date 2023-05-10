@@ -75,6 +75,7 @@ export const getMerchandise = catchAsyncErrors(async (req, res, next) => {
             )
         }
     }
+
     let category_val = [];
     let category_data = merchandises.category;
     if (category_data.length != 0) {
@@ -85,6 +86,7 @@ export const getMerchandise = catchAsyncErrors(async (req, res, next) => {
             )
         }
     }
+
     let merch_val = {
         id: merchandises.id,
         title: merchandises.title,
@@ -111,11 +113,12 @@ export const getMerchandise = catchAsyncErrors(async (req, res, next) => {
 // Update Merchandise by ID
 export const updateMerchandise = catchAsyncErrors(async (req, res, next) => {
     let merchandises = merchandise.findById(req.params.id);
+    console.log(merchandises);
 
     if(!merchandises) {
         return next(new ErrorHandler("Merchandise not found.", 404));
     }
-    
+
     let merch_val = {...req.body};
     merch_val.thumbnail = Buffer.from(req.body.thumbnail, "base64");
     
@@ -125,26 +128,25 @@ export const updateMerchandise = catchAsyncErrors(async (req, res, next) => {
         useFindandModify:false
     });
 
-    merch_val = {
-        title: merchandises.title,
-        thumbnail: Buffer.from(merchandises.thumbnail).toString("base64"),
-        description: merchandises.description,
-        category: merchandises.category,
-        mrp: merchandises.mrp,
-        tags: merchandises.tags,
-        book_count: merchandises.book_count,
-        pricing: merchandises.pricing,
-        price: merchandises.price,
-        location: merchandises.location,
-        quantity: merchandises.quantity,
-        inventory: merchandises.inventory,
-        reviews: merchandises.reviews
-    }
+    // let resp = {
+    //     title: merchandises.title,
+    //     thumbnail: Buffer.from(merchandises.thumbnail).toString("base64"),
+    //     description: merchandises.description,
+    //     category: merchandises.category,
+    //     mrp: merchandises.mrp,
+    //     tags: merchandises.tags,
+    //     book_count: merchandises.book_count,
+    //     pricing: merchandises.pricing,
+    //     price: merchandises.price,
+    //     location: merchandises.location,
+    //     quantity: merchandises.quantity,
+    //     inventory: merchandises.inventory,
+    //     reviews: merchandises.reviews
+    // }
 
-    
-    res.status(200).json({
+    res.status(201).json({
         success:true,
-        merch_val
+        merchandises
     });
     
  });
