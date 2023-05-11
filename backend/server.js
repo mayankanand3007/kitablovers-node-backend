@@ -126,7 +126,7 @@ import giftWrapPriceRoute from "./routes/giftWrapPrice.route.js";
  *                      schema:
  *                          $ref: '#/components/schemas/BooksInventory'
  */
-app.use("/api/booksInventory", booksInventoryRoute);
+app.use("/api/admin/booksInventory", booksInventoryRoute);
 
 /**
  * @swagger
@@ -167,7 +167,7 @@ app.use("/api/booksInventory", booksInventoryRoute);
  *                      schema:
  *                          $ref: '#/components/schemas/BookCondition'
  */
-app.use("/api/bookCondition", bookConditionRoute);
+app.use("/api/admin/bookCondition", bookConditionRoute);
 
 /**
  * @swagger
@@ -208,7 +208,7 @@ app.use("/api/bookCondition", bookConditionRoute);
  *                      schema:
  *                          $ref: '#/components/schemas/WarehouseCity'
  */
-app.use("/api/warehouseCity", warehouseCityRoute);
+app.use("/api/admin/warehouseCity", warehouseCityRoute);
 
 /**
  * @swagger
@@ -249,21 +249,21 @@ app.use("/api/warehouseCity", warehouseCityRoute);
  *                      schema:
  *                          $ref: '#/components/schemas/Books'
  */
-app.use("/api/book", bookRoute);
+app.use("/api/admin/book", bookRoute);
 
-app.use("/api/tag", tagRoute);
+app.use("/api/admin/tag", tagRoute);
 
-app.use("/api/genre", genreRoute);
+app.use("/api/admin/genre", genreRoute);
 
-app.use("/api/bookset", booksetRoute);
+app.use("/api/admin/bookset", booksetRoute);
 
-app.use("/api/merchandise", merchandiseRoute);
+app.use("/api/admin/merchandise", merchandiseRoute);
 
-app.use("/api/surpriseBox", surpriseBoxRoute);
+app.use("/api/admin/surpriseBox", surpriseBoxRoute);
 
-app.use("/api/merchandiseCategory", merchandiseCategoryRoute);
+app.use("/api/admin/merchandiseCategory", merchandiseCategoryRoute);
 
-app.use("/api/giftWrapPrice", giftWrapPriceRoute);
+app.use("/api/admin/giftWrapPrice", giftWrapPriceRoute);
 
 app.listen(process.env.PORT,() => {
     connect();
