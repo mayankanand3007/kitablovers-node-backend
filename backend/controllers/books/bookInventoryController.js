@@ -1,5 +1,7 @@
 import Book from "../../models/books/bookModel.js";
 import booksInventory from "../../models/books/booksInventoryModel.js";
+import booksCondition from "../../models/books/bookConditionModel.js";
+import warehouseCity from "../../models/books/warehouseCityModel.js";
 import ErrorHandler from "../../utils/errorhandler.js";
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
 
@@ -111,14 +113,44 @@ export const getAllBooksInventory = catchAsyncErrors(async (req, res, next) => {
     const books_inventories = await booksInventory.find();
     let book_inventory_resp = [];
     for (let book_inventory in books_inventories) {
+        const book_inventory_pricing = books_inventories[book_inventory].pricing;
+        let book_condition_val = [];
+        for (let book_pricing in book_inventory_pricing) {
+            let book_val_data = await booksCondition.findById(book_inventory_pricing[book_pricing].book_condition);
+            if (book_val_data.length != 0) {
+                book_condition_val.push(
+                    book_val_data
+                )
+            }
+            book_inventory_pricing[book_pricing].book_condition = book_condition_val;
+        }
+        const book_inventory_stock = books_inventories[book_inventory].inventory;
+        let warehouse_city_val = [];
+        book_condition_val = [];
+        for (let book_pricing in book_inventory_stock) {
+            let book_val_data = await booksCondition.findById(book_inventory_stock[book_pricing].book_condition);
+            if (book_val_data.length != 0) {
+                book_condition_val.push(
+                    book_val_data
+                )
+            }
+            let warehouse_val_data = await warehouseCity.findById(book_inventory_stock[book_pricing].city);
+            if (warehouse_val_data.length != 0) {
+                warehouse_city_val.push(
+                    warehouse_val_data
+                )
+            }
+            book_inventory_stock[book_pricing].book_condition = book_condition_val;
+            book_inventory_stock[book_pricing].warehouse_city = warehouse_city_val;
+        }
         book_inventory_resp.push(
-            {
-                id: books_inventories[book_inventory].id, 
-                isbn: books_inventories[book_inventory].isbn, 
-                mrp: books_inventories[book_inventory].mrp, 
-                pricing: books_inventories[book_inventory].pricing, 
-                inventory: books_inventories[book_inventory].inventory
-            });
+        {
+            id: books_inventories[book_inventory].id, 
+            isbn: books_inventories[book_inventory].isbn, 
+            mrp: books_inventories[book_inventory].mrp, 
+            pricing: books_inventories[book_inventory].pricing, 
+            inventory: books_inventories[book_inventory].inventory
+        });
     }
     res.status(200).json({
         success:true,
