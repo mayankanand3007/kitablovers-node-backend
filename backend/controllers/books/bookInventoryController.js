@@ -115,7 +115,7 @@ export const getAllBooksInventory = catchAsyncErrors(async (req, res, next) => {
     let pricing = [];
     let inventory = [];
     for (let book_inventory in books_inventories) {
-        let book_data = await Book.find({isbn:books_inventories[book_inventory].isbn})
+        let book_data = await Book.findOne({isbn:books_inventories[book_inventory].isbn})
         const book_inventory_pricing = books_inventories[book_inventory].pricing;
         let pricing_book_val_data = [];
         for (let book_pricing in book_inventory_pricing) {
@@ -143,7 +143,7 @@ export const getAllBooksInventory = catchAsyncErrors(async (req, res, next) => {
         resp.push(
             {
                 id: books_inventories[book_inventory].id,
-                thumbnail: book_data.thumbnail,
+                thumbnail: Buffer.from(book_data.thumbnail).toString("base64"),
                 isbn: books_inventories[book_inventory].isbn,
                 mrp: books_inventories[book_inventory].mrp,
                 pricing: pricing,
