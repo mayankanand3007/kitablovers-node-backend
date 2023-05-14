@@ -3,15 +3,15 @@ const { Schema } = mongoose;
 
 const booksInventorySchema = new Schema({
     isbn: {
-       type: Number,
-       required: [ true, "ISBN is required."],
-       unique: [ true, "ISBN should be a unique value."],
-       minLength: [10, "ISBN should be atleast 10 digit long."],
-       maxLength: [13, "ISBN can only be 13 digit long."]
+        type: Number,
+        required: [true, "ISBN is required."],
+        unique: [true, "ISBN should be a unique value."],
+        minLength: [10, "ISBN should be atleast 10 digit long."],
+        maxLength: [13, "ISBN can only be 13 digit long."]
     },
     mrp: {
         type: Number,
-        required: [ true, "MRP is required."],
+        required: [true, "MRP is required."],
         default: 0
     },
     pricing: [{
@@ -21,11 +21,11 @@ const booksInventorySchema = new Schema({
         },
         price: {
             type: Number,
-            required: [ true, "Price is required."],
+            required: [true, "Price is required."],
             default: 0
         }
     }],
-    inventory:[{
+    inventory: [{
         book_condition: {
             type: mongoose.Schema.ObjectId,
             ref: "BookCondition"
@@ -36,16 +36,16 @@ const booksInventorySchema = new Schema({
         },
         quantity: {
             type: Number,
-            required: [ true, "Quantity is required."],
+            required: [true, "Quantity is required."],
             default: 1
         },
         location: {
             type: String,
-            required: [ true, "Stock Location is required."],
+            required: [true, "Stock Location is required."],
         },
     }]
 }, {
-    timestamps:true,
+    timestamps: true,
 });
 
 export default mongoose.model("BooksInventory", booksInventorySchema)

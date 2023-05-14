@@ -5,7 +5,7 @@ import errorMiddleware from "./middleware/error.js";
 // App Specs
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.options('*', cors());
 app.use(errorMiddleware);
@@ -21,7 +21,7 @@ const connect = async () => {
     try {
         await mongoose.connect(process.env.MONGO);
         console.log("Connected to mongodb!");
-    } catch(error) {
+    } catch (error) {
         console.log(error);
     }
 };
@@ -44,6 +44,7 @@ import genreRoute from "./routes/genre.route.js";
 import tagRoute from "./routes/tag.route.js";
 import merchandiseCategoryRoute from "./routes/merchandiseCategory.route.js";
 import giftWrapPriceRoute from "./routes/giftWrapPrice.route.js";
+import bookGenreRoute from "./routes/bookGenre.route.js";
 
 //Routes
 /**
@@ -265,14 +266,16 @@ app.use("/api/admin/merchandiseCategory", merchandiseCategoryRoute);
 
 app.use("/api/admin/giftWrapPrice", giftWrapPriceRoute);
 
+app.use("/api/", bookGenreRoute);
+
 // Handling Uncaught Exception
 process.on("uncaughtException", (err) => {
     console.log(`Error: ${err.message}`);
     console.log(`Shutting down the server due to Uncaught Exception`);
     process.exit(1);
-  });
+});
 
-app.listen(process.env.PORT,() => {
+app.listen(process.env.PORT, () => {
     connect();
     console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });
@@ -281,8 +284,8 @@ app.listen(process.env.PORT,() => {
 process.on("unhandledRejection", (err) => {
     console.log(`Error: ${err.message}`);
     console.log(`Shutting down the server due to Unhandled Promise Rejection`);
-  
+
     server.close(() => {
-      process.exit(1);
+        process.exit(1);
     });
 });

@@ -4,30 +4,31 @@ import booksCondition from "../../models/books/bookConditionModel.js";
 import warehouseCity from "../../models/books/warehouseCityModel.js";
 import ErrorHandler from "../../utils/errorhandler.js";
 import catchAsyncErrors from "../../middleware/catchAsyncErrors.js";
+import ApiFeatures from "../../middleware/apifeatures.js";
 
 // Create Books Inventory
 export const createBooksInventory = catchAsyncErrors(async (req, res, next) => {
     const response = await createBooksISBN(req.body.isbn);
-    if(!response){
+    if (!response) {
         return next(new ErrorHandler("Book ISBN not found.", 404));
     }
-    const newBooksInventory = new booksInventory ({
+    const newBooksInventory = new booksInventory({
         ...req.body,
     });
     await newBooksInventory.save();
     res.status(200).json({
-        success:true,
+        success: true,
         newBooksInventory
     });
 });
 
-async function createBooksISBN (isbn) {
+async function createBooksISBN(isbn) {
     // const url = "https://www.googleapis.com/books/v1/volumes?q=isbn=" + newBooksInventory["isbn"];
     // request(url, library = (err, res, body) => {
     //     // pass
     // });
     // Check if ISBN is already present in DB.
-    const check_isbn = await Book.findOne({isbn:isbn});
+    const check_isbn = await Book.findOne({ isbn: isbn });
     if (!check_isbn) {
         let data = await (await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)).json();
         // Check if ISBN is available in Google Books API.
@@ -42,7 +43,6 @@ async function createBooksISBN (isbn) {
                 let fig = await fetch(book.imageLinks.thumbnail);
                 thumbnail_bson = Buffer.from(await fig.arrayBuffer());
                 const newBook = new Book({
-                    id: id,
                     isbn: isbn,
                     genre: [0],
                     title: book.title,
@@ -115,12 +115,13 @@ export const getAllBooksInventory = catchAsyncErrors(async (req, res, next) => {
     let pricing = [];
     let inventory = [];
     for (let book_inventory in books_inventories) {
+        let book_data = await Book.find({isbn:books_inventories[book_inventory].isbn})
         const book_inventory_pricing = books_inventories[book_inventory].pricing;
         let pricing_book_val_data = [];
         for (let book_pricing in book_inventory_pricing) {
             pricing_book_val_data = await booksCondition.findById(book_inventory_pricing[book_pricing].book_condition);
             pricing.push({
-                "_id":book_inventory_pricing[book_pricing].id,
+                "_id": book_inventory_pricing[book_pricing].id,
                 "price": book_inventory_pricing[book_pricing].price,
                 "book_condition": pricing_book_val_data
             });
@@ -131,9 +132,8 @@ export const getAllBooksInventory = catchAsyncErrors(async (req, res, next) => {
         for (let book_pricing in book_inventory_stock) {
             book_val_data = await booksCondition.findById(book_inventory_stock[book_pricing].book_condition);
             warehouse_val_data = await warehouseCity.findById(book_inventory_stock[book_pricing].city);
-            inventory.push( {
-                "_id":books_inventories[book_inventory].inventory.id,
-                "price": books_inventories[book_inventory].inventory.price,
+            inventory.push({
+                "_id": book_inventory_stock[book_pricing]._id,
                 "book_condition": book_val_data,
                 "city": warehouse_val_data,
                 "quantity": book_inventory_stock[book_pricing].quantity,
@@ -141,16 +141,19 @@ export const getAllBooksInventory = catchAsyncErrors(async (req, res, next) => {
             });
         }
         resp.push(
-        {
-            id: books_inventories[book_inventory].id, 
-            isbn: books_inventories[book_inventory].isbn, 
-            mrp: books_inventories[book_inventory].mrp,
-            pricing: pricing, 
-            inventory: inventory
-        });
+            {
+                id: books_inventories[book_inventory].id,
+                thumbnail: book_data.thumbnail,
+                isbn: books_inventories[book_inventory].isbn,
+                mrp: books_inventories[book_inventory].mrp,
+                pricing: pricing,
+                inventory: inventory,
+                isbnCreatedAt: books_inventories[book_inventory].createdAt,
+                isbnUpdatedAt: books_inventories[book_inventory].updatedAt
+            });
     }
     res.status(200).json({
-        success:true,
+        success: true,
         resp
     });
 });
@@ -159,13 +162,49 @@ export const getAllBooksInventory = catchAsyncErrors(async (req, res, next) => {
 export const getBooksInventory = catchAsyncErrors(async (req, res, next) => {
     const books_inventories = await booksInventory.findById(req.params.id);
 
-    if(!books_inventories){
+    if (!books_inventories) {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
-
+    let pricing = [];
+    let inventory = [];
+    const book_inventory_pricing = books_inventories.pricing;
+    let pricing_book_val_data = [];
+    for (let book_pricing in book_inventory_pricing) {
+        pricing_book_val_data = await booksCondition.findById(book_inventory_pricing[book_pricing].book_condition);
+        pricing.push({
+            "_id": book_inventory_pricing[book_pricing].id,
+            "price": book_inventory_pricing[book_pricing].price,
+            "book_condition": pricing_book_val_data
+        });
+    }
+    const book_inventory_stock = books_inventories.inventory;
+    let book_val_data = [];
+    let warehouse_val_data = [];
+    for (let book_pricing in book_inventory_stock) {
+        book_val_data = await booksCondition.findById(book_inventory_stock[book_pricing].book_condition);
+        warehouse_val_data = await warehouseCity.findById(book_inventory_stock[book_pricing].city);
+        inventory.push({
+            "_id": book_inventory_stock[book_pricing]._id,
+            "book_condition": book_val_data,
+            "city": warehouse_val_data,
+            "quantity": book_inventory_stock[book_pricing].quantity,
+            "location": book_inventory_stock[book_pricing].location
+        });
+    }
+    let book_data = await Book.find({isbn:books_inventories.isbn});
+    let resp = {
+        id: books_inventories.id,
+        isbn: books_inventories.isbn,
+        mrp: books_inventories.mrp,
+        thumbnail: book_data.thumbnail,
+        pricing: pricing,
+        inventory: inventory,
+        isbnCreatedAt: books_inventories.createdAt,
+        isbnUpdatedAt: books_inventories.updatedAt
+    }
     res.status(200).json({
-        success:true,
-        books_inventories
+        success: true,
+        resp
     });
 });
 
@@ -173,46 +212,46 @@ export const getBooksInventory = catchAsyncErrors(async (req, res, next) => {
 export const updateBooksInventory = catchAsyncErrors(async (req, res, next) => {
     let books_inventories = booksInventory.findById(req.params.id);
 
-    if(!books_inventories) {
+    if (!books_inventories) {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
-    
-    books_inventories = await booksInventory.findByIdAndUpdate(req.params.id,req.body,{
-        new:true,
-        runValidators:true,
-        useFindandModify:false
+
+    books_inventories = await booksInventory.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+        useFindandModify: false
     });
 
     res.status(200).json({
-        success:true,
+        success: true,
         books_inventories
     });
 
- });
+});
 
 // Update MRP in Books Inventory by ID
 export const updateMRPBooksInventory = catchAsyncErrors(async (req, res, next) => {
     let books_inventories = booksInventory.findById(req.params.id);
 
-    if(!books_inventories) {
+    if (!books_inventories) {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
 
     const books_inventories_val = {
         isbn: booksInventory.isbn,
-        mrp: req.body.mrp, 
-        pricing: booksInventory.pricing, 
+        mrp: req.body.mrp,
+        pricing: booksInventory.pricing,
         inventory: booksInventory.inventory
     }
 
-    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val,{
-        new:true,
-        runValidators:true,
-        useFindandModify:false
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val, {
+        new: true,
+        runValidators: true,
+        useFindandModify: false
     });
 
     res.status(200).json({
-        success:true,
+        success: true,
         resp
     });
 
@@ -222,7 +261,7 @@ export const updateMRPBooksInventory = catchAsyncErrors(async (req, res, next) =
 export const addPricingBooksInventory = catchAsyncErrors(async (req, res, next) => {
     let books_inventories = await booksInventory.findById(req.params.id);
 
-    if(!books_inventories) {
+    if (!books_inventories) {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
 
@@ -230,32 +269,32 @@ export const addPricingBooksInventory = catchAsyncErrors(async (req, res, next) 
 
     const books_inventories_val = {
         isbn: books_inventories.isbn,
-        mrp: books_inventories.mrp, 
+        mrp: books_inventories.mrp,
         pricing: books_inventories.pricing,
         inventory: books_inventories.inventory
     }
 
-    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val,{
-        new:true,
-        runValidators:true,
-        useFindandModify:false
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val, {
+        new: true,
+        runValidators: true,
+        useFindandModify: false
     });
 
     res.status(200).json({
-        success:true,
+        success: true,
         resp
     });
 
- });
+});
 
 // Update Pricing in Books Inventory by ID
 export const updatePricingBooksInventory = catchAsyncErrors(async (req, res, next) => {
     let books_inventories = await booksInventory.findById(req.params.id);
 
-    if(!books_inventories) {
+    if (!books_inventories) {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
-    
+
     for (let each_pricing in books_inventories.pricing) {
         if (books_inventories.pricing[each_pricing].id === req.params.pricingid) {
             books_inventories.pricing[each_pricing].book_condition = req.body.book_condition;
@@ -263,24 +302,24 @@ export const updatePricingBooksInventory = catchAsyncErrors(async (req, res, nex
         }
     }
 
-    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories,{
-        new:true,
-        runValidators:true,
-        useFindandModify:false
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories, {
+        new: true,
+        runValidators: true,
+        useFindandModify: false
     });
 
     res.status(200).json({
-        success:true,
+        success: true,
         resp
     });
 
- });
+});
 
- // Add Inventory in Books Inventory by ID
+// Add Inventory in Books Inventory by ID
 export const addInventoryBooksInventory = catchAsyncErrors(async (req, res, next) => {
     let books_inventories = await booksInventory.findById(req.params.id);
 
-    if(!books_inventories) {
+    if (!books_inventories) {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
 
@@ -288,29 +327,29 @@ export const addInventoryBooksInventory = catchAsyncErrors(async (req, res, next
 
     const books_inventories_val = {
         isbn: booksInventory.isbn,
-        mrp: booksInventory.mrp, 
-        pricing: booksInventory.pricing, 
+        mrp: booksInventory.mrp,
+        pricing: booksInventory.pricing,
         inventory: books_inventories.inventory
     }
-    
-    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val,{
-        new:true,
-        runValidators:true,
-        useFindandModify:false
+
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val, {
+        new: true,
+        runValidators: true,
+        useFindandModify: false
     });
 
     res.status(200).json({
-        success:true,
+        success: true,
         resp
     });
 
- });
+});
 
- // Update Inventory in Books Inventory by ID
+// Update Inventory in Books Inventory by ID
 export const updateInventoryBooksInventory = catchAsyncErrors(async (req, res, next) => {
     let books_inventories = await booksInventory.findById(req.params.id);
 
-    if(!books_inventories) {
+    if (!books_inventories) {
         return next(new ErrorHandler("Inventory Record not found.", 404));
     }
 
@@ -322,35 +361,73 @@ export const updateInventoryBooksInventory = catchAsyncErrors(async (req, res, n
             books_inventories.inventory[each_inventory].location = req.body.location;
         }
     }
-    
-    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories,{
-        new:true,
-        runValidators:true,
-        useFindandModify:false
+
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories, {
+        new: true,
+        runValidators: true,
+        useFindandModify: false
     });
 
     res.status(200).json({
-        success:true,
+        success: true,
         resp
     });
 
- });
+});
 
 // Delete Books Inventory by ID
 export const deleteBooksInventory = catchAsyncErrors(async (req, res, next) => {
     const books_inventories = await booksInventory.findById(req.params.id);
 
-    if(!books_inventories){
+    if (!books_inventories) {
         return res.status(500).json({
-            success:false,
-            message:"Inventory Record not found."
+            success: false,
+            message: "Inventory Record not found."
         })
     }
 
     await books_inventories.remove();
 
     res.status(200).json({
-        success:true,
-        message:"Books Inventory deleted successfully."
+        success: true,
+        message: "Books Inventory deleted successfully."
     })
+});
+
+// Get Books in Crime Genre
+export const getBooksCrime = catchAsyncErrors(async (req, res, next) => {
+    const resultPerPage = 10;
+    const apifeature = new ApiFeatures(Book.find(), req.query).search().filter().pagination(resultPerPage);
+    const books = await apifeature.query;
+    let resp = [];
+    for (let book in books) {
+        let tag_val = [];
+        for (let tag in books[book].tag) {
+            tag_val.push( 
+                {
+                    "id": tag.id,
+                    "name": tag.name
+                }
+            )
+        }
+        let book_inventories = await booksInventory.find({ isbn: books[book].isbn });
+        resp.push(
+            {
+                id: books[book].id,
+                thumbnail: Buffer.from(books[book].thumbnail).toString("base64"),
+                title: books[book].title,
+                isbn: books[book].isbn,
+                mrp: book_inventories[0].mrp,
+                price: book_inventories[0].pricing[0].price,
+                pricing: book_inventories[0].pricing,
+                inventory: book_inventories[0].inventory,
+                binding: books[book].binding, 
+                ageGroup: books[book].ageGroup, 
+                language: books[book].language, 
+            });
+    }
+    res.status(201).json({
+        success: true,
+        resp
+    });
 });
