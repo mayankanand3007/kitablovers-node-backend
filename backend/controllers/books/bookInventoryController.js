@@ -315,6 +315,40 @@ export const updatePricingBooksInventory = catchAsyncErrors(async (req, res, nex
 
 });
 
+// Delete Pricing in Books Inventory by ID
+export const deletePricingBooksInventory = catchAsyncErrors(async (req, res, next) => {
+    let books_inventories = await booksInventory.findById(req.params.id);
+
+    if (!books_inventories) {
+        return next(new ErrorHandler("Inventory Record not found.", 404));
+    }
+
+    for (let each_pricing in books_inventories.pricing) {
+        if (books_inventories.pricing[each_pricing].id === req.params.pricingid) {
+            books_inventories.pricing.remove(books_inventories.pricing[each_pricing]);
+        }
+    }
+    
+    const books_inventories_val = {
+        isbn: books_inventories.isbn,
+        mrp: books_inventories.mrp,
+        pricing: books_inventories.pricing,
+        inventory: books_inventories.inventory
+    }
+
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val, {
+        new: true,
+        runValidators: true,
+        useFindandModify: false
+    });
+
+    res.status(200).json({
+        success: true,
+        resp
+    });
+
+});
+
 // Add Inventory in Books Inventory by ID
 export const addInventoryBooksInventory = catchAsyncErrors(async (req, res, next) => {
     let books_inventories = await booksInventory.findById(req.params.id);
@@ -363,6 +397,40 @@ export const updateInventoryBooksInventory = catchAsyncErrors(async (req, res, n
     }
 
     let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories, {
+        new: true,
+        runValidators: true,
+        useFindandModify: false
+    });
+
+    res.status(200).json({
+        success: true,
+        resp
+    });
+
+});
+
+// Delete Inventory in Books Inventory by ID
+export const deleteInventoryBooksInventory = catchAsyncErrors(async (req, res, next) => {
+    let books_inventories = await booksInventory.findById(req.params.id);
+
+    if (!books_inventories) {
+        return next(new ErrorHandler("Inventory Record not found.", 404));
+    }
+
+    for (let each_inventory in books_inventories.inventory) {
+        if (books_inventories.inventory[each_inventory].id === req.params.inventoryid) {
+            books_inventories.inventory.remove(books_inventories.inventory[each_inventory]);
+        }
+    }
+    
+    const books_inventories_val = {
+        isbn: books_inventories.isbn,
+        mrp: books_inventories.mrp,
+        pricing: books_inventories.pricing,
+        inventory: books_inventories.inventory
+    }
+
+    let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val, {
         new: true,
         runValidators: true,
         useFindandModify: false
