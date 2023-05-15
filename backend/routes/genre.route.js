@@ -19,7 +19,7 @@ const router = express.Router();
 router.get("/", getAllGenres);
 router.get("/l1", getL1Genres);
 router.get("/l2", getL1L2Genres);
-router.get("/l3", getL3Genres);
+router.get("/l3/:l1id", getL3Genres);
 router.get("/:id", getGenre);
 // router.get("/replace/l1/:id", getReplaceGenresL1);
 // router.get("/replace/l2/:id", getReplaceGenresL2);

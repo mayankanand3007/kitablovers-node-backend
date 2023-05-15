@@ -101,7 +101,6 @@ export const getL1L2Genres = catchAsyncErrors(async (req, res, next) => {
     for (let genreno in genresl1) {
         const genrel1 = genresl1[genreno];
         const genresl2 = await genreL2.find({level1:genrel1._id});
-        console.log(genresl2);
         if (genresl2.length != 0) {
             genres_val.push({genrel1, children:genresl2});
         }
@@ -111,20 +110,19 @@ export const getL1L2Genres = catchAsyncErrors(async (req, res, next) => {
 
 // Get L3 Genres
 export const getL3Genres = catchAsyncErrors(async (req, res, next) => {
-    const genresl2 = await genreL2.find();
-    let genres_val = [];
+    const genresl2 = await genreL2.find({"level1":req.params.l1id});
+    let resp = [];
     for (let genreno in genresl2) {
-        let genrel2 = genresl2[genreno];
-        let parent_genre = await genreL1.findById(genrel2.level1);
-        genres_val.push({...genrel2._doc, level_type:2, parent_genre: parent_genre.name});
+        const genrel2 = genresl2[genreno];
+        const genresl3 = await genreL3.find({level2:genrel2._id});
+        if (genresl3.length != 0) {
+            resp.push({genrel2, children:genresl3});
+        }
     }
-    const genresl3 = await genreL3.find();
-    for (let genreno in genresl3) {
-        let genrel3 = genresl3[genreno];
-        let parent_genre = await genreL2.findById(genrel3.level2);
-        genres_val.push({...genrel3._doc, level_type:3, parent_genre: parent_genre.name});
-    }
-    res.status(201).send(genres_val);
+    res.status(200).json({
+        success:true,
+        resp
+    });
 });
 
 // Get Replace Genres
