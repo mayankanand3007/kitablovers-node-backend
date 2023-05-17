@@ -112,16 +112,16 @@ async function createBooksISBN(isbn) {
 export const getAllBooksInventory = catchAsyncErrors(async (req, res, next) => {
     const books_inventories = await booksInventory.find();
     let resp = [];
-    let pricing = [];
-    let inventory = [];
     for (let book_inventory in books_inventories) {
+        let pricing = [];
+        let inventory = [];
         let book_data = await Book.findOne({isbn:books_inventories[book_inventory].isbn})
         const book_inventory_pricing = books_inventories[book_inventory].pricing;
         let pricing_book_val_data = [];
         for (let book_pricing in book_inventory_pricing) {
             pricing_book_val_data = await booksCondition.findById(book_inventory_pricing[book_pricing].book_condition);
             pricing.push({
-                "_id": book_inventory_pricing[book_pricing].id,
+                "_id": book_inventory_pricing[book_pricing]._id,
                 "price": book_inventory_pricing[book_pricing].price,
                 "book_condition": pricing_book_val_data
             });
@@ -172,7 +172,7 @@ export const getBooksInventory = catchAsyncErrors(async (req, res, next) => {
     for (let book_pricing in book_inventory_pricing) {
         pricing_book_val_data = await booksCondition.findById(book_inventory_pricing[book_pricing].book_condition);
         pricing.push({
-            "_id": book_inventory_pricing[book_pricing].id,
+            "_id": book_inventory_pricing[book_pricing]._id,
             "price": book_inventory_pricing[book_pricing].price,
             "book_condition": pricing_book_val_data
         });
@@ -429,7 +429,7 @@ export const deleteInventoryBooksInventory = catchAsyncErrors(async (req, res, n
         pricing: books_inventories.pricing,
         inventory: books_inventories.inventory
     }
-
+    
     let resp = await booksInventory.findByIdAndUpdate(req.params.id, books_inventories_val, {
         new: true,
         runValidators: true,
